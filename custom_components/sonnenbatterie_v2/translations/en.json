@@ -7,7 +7,9 @@
                 "data": {
                     "host": "IP address",
                     "token": "Auth-Token",
-                    "scan_interval": "Update interval (seconds)"
+                    "scan_interval": "Update interval (seconds)",
+                    "diagnostic_scan_interval": "Diagnostic update interval (seconds)",
+                    "configuration_scan_interval": "Configuration update interval (seconds)"
                 }
             },
             "reconfigure": {
@@ -16,7 +18,9 @@
                 "data": {
                     "host": "IP address",
                     "token": "Auth-Token",
-                    "scan_interval": "Update interval (seconds)"
+                    "scan_interval": "Update interval (seconds)",
+                    "diagnostic_scan_interval": "Diagnostic update interval (seconds)",
+                    "configuration_scan_interval": "Configuration update interval (seconds)"
                 }
             },
             "reauth_confirm": {
@@ -49,19 +53,45 @@
                     "discharging": "Discharging"
                 }
             },
-            "consumption": { "name": "Consumption" },
-            "consumption_avg": { "name": "Consumption (average)" },
-            "production": { "name": "Production" },
-            "grid_power": { "name": "Grid in/out" },
-            "grid_export": { "name": "Grid feed-in" },
-            "grid_import": { "name": "Grid consumption" },
-            "battery_power": { "name": "Battery charge/discharge" },
-            "battery_charge": { "name": "Battery charge power" },
-            "battery_discharge": { "name": "Battery discharge power" },
-            "soc_user": { "name": "Charge" },
-            "soc_real": { "name": "Charge (real)" },
-            "remaining_capacity": { "name": "Remaining capacity" },
-            "system_status": { "name": "System status" },
+            "consumption": {
+                "name": "Consumption"
+            },
+            "consumption_avg": {
+                "name": "Consumption (average)"
+            },
+            "production": {
+                "name": "Production"
+            },
+            "grid_power": {
+                "name": "Grid in/out"
+            },
+            "grid_export": {
+                "name": "Grid feed-in"
+            },
+            "grid_import": {
+                "name": "Grid consumption"
+            },
+            "battery_power": {
+                "name": "Battery charge/discharge"
+            },
+            "battery_charge": {
+                "name": "Battery charge power"
+            },
+            "battery_discharge": {
+                "name": "Battery discharge power"
+            },
+            "soc_user": {
+                "name": "Charge"
+            },
+            "soc_real": {
+                "name": "Charge (real)"
+            },
+            "remaining_capacity": {
+                "name": "Remaining capacity"
+            },
+            "system_status": {
+                "name": "System status"
+            },
             "operating_mode": {
                 "name": "Operating mode",
                 "state": {
@@ -73,10 +103,18 @@
                     "automatic_optimization": "Automatic - Optimization"
                 }
             },
-            "frequency": { "name": "Grid frequency" },
-            "voltage_ac": { "name": "AC voltage" },
-            "voltage_battery": { "name": "Battery voltage" },
-            "backup_buffer": { "name": "Backup buffer" },
+            "frequency": {
+                "name": "Grid frequency"
+            },
+            "voltage_ac": {
+                "name": "AC voltage"
+            },
+            "voltage_battery": {
+                "name": "Battery voltage"
+            },
+            "backup_buffer": {
+                "name": "Backup buffer"
+            },
             "battery_care": {
                 "name": "Battery care",
                 "state": {
@@ -84,38 +122,101 @@
                     "inactive": "Inactive"
                 }
             },
-            "inverter_temperature": { "name": "Inverter temperature" },
-            "pv_power": { "name": "PV power" },
-            "pv_voltage": { "name": "PV voltage" },
-            "pv_current": { "name": "PV current" },
-            "battery_cycles": { "name": "Battery cycles" },
-            "cell_temperature_max": { "name": "Max cell temperature" },
-            "system_dc_voltage": { "name": "Battery DC voltage" },
-            "module_count": { "name": "Battery module count" },
-            "inverter_max_power": { "name": "Inverter max power" },
-            "installed_capacity": { "name": "Installed capacity" },
-            "battery_current": { "name": "Battery current" },
-            "cell_temperature_min": { "name": "Min cell temperature" },
-            "cell_voltage_max": { "name": "Max cell voltage" },
-            "cell_voltage_min": { "name": "Min cell voltage" },
-            "full_charge_capacity": { "name": "Full charge capacity" },
-            "state_of_health": { "name": "State of health" },
-            "pm_w_total": { "name": "{meter} total power" },
-            "pm_w_l1": { "name": "{meter} power L1" },
-            "pm_w_l2": { "name": "{meter} power L2" },
-            "pm_w_l3": { "name": "{meter} power L3" },
-            "pm_a_l1": { "name": "{meter} current L1" },
-            "pm_a_l2": { "name": "{meter} current L2" },
-            "pm_a_l3": { "name": "{meter} current L3" },
-            "pm_v_l1_n": { "name": "{meter} voltage L1-N" },
-            "pm_v_l2_n": { "name": "{meter} voltage L2-N" },
-            "pm_v_l3_n": { "name": "{meter} voltage L3-N" },
-            "pm_kwh_imported": { "name": "{meter} energy imported" },
-            "pm_kwh_exported": { "name": "{meter} energy exported" }
+            "inverter_temperature": {
+                "name": "Inverter temperature"
+            },
+            "pv_power": {
+                "name": "PV power"
+            },
+            "pv_voltage": {
+                "name": "PV voltage"
+            },
+            "pv_current": {
+                "name": "PV current"
+            },
+            "battery_cycles": {
+                "name": "Battery cycles"
+            },
+            "cell_temperature_max": {
+                "name": "Max cell temperature"
+            },
+            "system_dc_voltage": {
+                "name": "Battery DC voltage"
+            },
+            "module_count": {
+                "name": "Battery module count"
+            },
+            "inverter_max_power": {
+                "name": "Inverter max power"
+            },
+            "installed_capacity": {
+                "name": "Installed capacity"
+            },
+            "battery_current": {
+                "name": "Battery current"
+            },
+            "cell_temperature_min": {
+                "name": "Min cell temperature"
+            },
+            "cell_voltage_max": {
+                "name": "Max cell voltage"
+            },
+            "cell_voltage_min": {
+                "name": "Min cell voltage"
+            },
+            "full_charge_capacity": {
+                "name": "Full charge capacity"
+            },
+            "state_of_health": {
+                "name": "State of health"
+            },
+            "pm_w_total": {
+                "name": "{meter} total power"
+            },
+            "pm_w_l1": {
+                "name": "{meter} power L1"
+            },
+            "pm_w_l2": {
+                "name": "{meter} power L2"
+            },
+            "pm_w_l3": {
+                "name": "{meter} power L3"
+            },
+            "pm_a_l1": {
+                "name": "{meter} current L1"
+            },
+            "pm_a_l2": {
+                "name": "{meter} current L2"
+            },
+            "pm_a_l3": {
+                "name": "{meter} current L3"
+            },
+            "pm_v_l1_n": {
+                "name": "{meter} voltage L1-N"
+            },
+            "pm_v_l2_n": {
+                "name": "{meter} voltage L2-N"
+            },
+            "pm_v_l3_n": {
+                "name": "{meter} voltage L3-N"
+            },
+            "pm_kwh_imported": {
+                "name": "{meter} energy imported"
+            },
+            "pm_kwh_exported": {
+                "name": "{meter} energy exported"
+            },
+            "software_version": {
+                "name": "Software version"
+            }
         },
         "binary_sensor": {
-            "system_alarm": { "name": "System alarm" },
-            "system_warning": { "name": "System warning" }
+            "system_alarm": {
+                "name": "System alarm"
+            },
+            "system_warning": {
+                "name": "System warning"
+            }
         },
         "select": {
             "operating_mode": {
@@ -130,14 +231,26 @@
             }
         },
         "number": {
-            "force_charge": { "name": "Force charge" },
-            "force_discharge": { "name": "Force discharge" },
-            "battery_reserve": { "name": "Battery reserve" }
+            "force_charge": {
+                "name": "Force charge"
+            },
+            "force_discharge": {
+                "name": "Force discharge"
+            },
+            "battery_reserve": {
+                "name": "Battery reserve"
+            }
         },
         "button": {
-            "reset_all": { "name": "Reset charge/discharge" },
-            "reset_charge": { "name": "Reset forced charge" },
-            "reset_discharge": { "name": "Reset forced discharge" }
+            "reset_all": {
+                "name": "Reset charge/discharge"
+            },
+            "reset_charge": {
+                "name": "Reset forced charge"
+            },
+            "reset_discharge": {
+                "name": "Reset forced discharge"
+            }
         }
     }
 }

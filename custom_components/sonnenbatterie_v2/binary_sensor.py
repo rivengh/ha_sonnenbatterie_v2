@@ -1,4 +1,5 @@
 """Binary sensor platform: battery alarm and warning flags (from /battery)."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -56,7 +57,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up sonnenBatterie binary sensors."""
-    coordinator = entry.runtime_data
+    coordinator = entry.runtime_data.diagnostic_coordinator
     async_add_entities(
         SonnenBinarySensor(coordinator, description) for description in BINARY_SENSORS
     )

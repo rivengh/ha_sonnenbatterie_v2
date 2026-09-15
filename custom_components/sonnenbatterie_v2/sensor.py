@@ -1,4 +1,5 @@
 """Sensor platform for the sonnenBatterie v2 integration."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -73,7 +74,7 @@ def _remaining_wh(d: dict[str, Any]) -> StateType:
 
 
 # Names are provided via translations (entity.sensor.<key>.name); see translations/*.json
-SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
+STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
     # --- status -------------------------------------------------------------
     SonnenSensorEntityDescription(
         key="battery_state",
@@ -268,6 +269,9 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
             "active" if d["status"].get("dischargeNotAllowed") else "inactive"
         ),
     ),
+)
+
+DIAGNOSTIC_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
     # --- inverter -----------------------------------------------------------
     SonnenSensorEntityDescription(
         key="inverter_temperature",
@@ -319,6 +323,18 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         suggested_display_precision=0,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: d["battery"].get("cyclecount"),
+    ),
+    SonnenSensorEntityDescription(
+        key="full_charge_capacity",
+        translation_key="full_charge_capacity",
+        icon="mdi:battery-heart-outline",
+        device_class=SensorDeviceClass.ENERGY_STORAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+        suggested_display_precision=0,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+        value_fn=lambda d: _round(d["battery"].get("fullchargecapacitywh"), 0),
     ),
     SonnenSensorEntityDescription(
         key="cell_temperature_max",
@@ -386,6 +402,19 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         entity_registry_enabled_default=False,
         value_fn=lambda d: _round(d["battery"].get("minimumcellvoltage"), 3),
     ),
+    SonnenSensorEntityDescription(
+        key="state_of_health",
+        translation_key="state_of_health",
+        icon="mdi:battery-heart-variant",
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=PERCENTAGE,
+        suggested_display_precision=1,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda d: d["derived"].get("state_of_health_pct"),
+    ),
+)
+
+CONFIGURATION_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
     # --- configurations -----------------------------------------------------
     SonnenSensorEntityDescription(
         key="module_count",
@@ -404,6 +433,13 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         value_fn=lambda d: _to_int(d["configurations"].get("IC_InverterMaxPower_w")),
     ),
     SonnenSensorEntityDescription(
+        key="software_version",
+        translation_key="software_version",
+        icon="mdi:chip",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda d: d["configurations"].get("DE_Software"),
+    ),
+    SonnenSensorEntityDescription(
         key="installed_capacity",
         translation_key="installed_capacity",
         icon="mdi:battery-high",
@@ -412,28 +448,6 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
         value_fn=lambda d: d["derived"].get("installed_capacity_wh"),
-    ),
-    SonnenSensorEntityDescription(
-        key="full_charge_capacity",
-        translation_key="full_charge_capacity",
-        icon="mdi:battery-heart-outline",
-        device_class=SensorDeviceClass.ENERGY_STORAGE,
-        state_class=SensorStateClass.MEASUREMENT,
-        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
-        suggested_display_precision=0,
-        entity_category=EntityCategory.DIAGNOSTIC,
-        entity_registry_enabled_default=False,
-        value_fn=lambda d: _round(d["battery"].get("fullchargecapacitywh"), 0),
-    ),
-    SonnenSensorEntityDescription(
-        key="state_of_health",
-        translation_key="state_of_health",
-        icon="mdi:battery-heart-variant",
-        state_class=SensorStateClass.MEASUREMENT,
-        native_unit_of_measurement=PERCENTAGE,
-        suggested_display_precision=1,
-        entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda d: d["derived"].get("state_of_health_pct"),
     ),
 )
 
@@ -451,6 +465,7 @@ _PM_FIELDS: dict[str, tuple[SensorDeviceClass, str]] = {
     "v_l2_n": (SensorDeviceClass.VOLTAGE, UnitOfElectricPotential.VOLT),
     "v_l3_n": (SensorDeviceClass.VOLTAGE, UnitOfElectricPotential.VOLT),
 }
+
 
 def _pm_value(d: dict[str, Any], deviceid: Any, channel: Any, field: str) -> Any:
     """Look up a meter value by its (deviceid, channel) identity.
@@ -528,14 +543,27 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up sonnenBatterie sensors."""
-    coordinator = entry.runtime_data
+    runtime = entry.runtime_data
+
     entities: list[SonnenSensor] = [
-        SonnenSensor(coordinator, description) for description in SENSORS
+        SonnenSensor(runtime.coordinator, description) for description in STATUS_SENSORS
     ]
-    entities += [
-        SonnenSensor(coordinator, description)
-        for description in _powermeter_descriptions(coordinator)
-    ]
+
+    entities.extend(
+        SonnenSensor(runtime.diagnostic_coordinator, description)
+        for description in DIAGNOSTIC_SENSORS
+    )
+
+    entities.extend(
+        SonnenSensor(runtime.configuration_coordinator, description)
+        for description in CONFIGURATION_SENSORS
+    )
+
+    entities.extend(
+        SonnenSensor(runtime.diagnostic_coordinator, description)
+        for description in _powermeter_descriptions(runtime.diagnostic_coordinator)
+    )
+
     async_add_entities(entities)
 
 

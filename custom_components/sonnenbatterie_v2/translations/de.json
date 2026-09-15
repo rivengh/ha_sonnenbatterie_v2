@@ -7,7 +7,9 @@
                 "data": {
                     "host": "IP-Adresse",
                     "token": "Auth-Token",
-                    "scan_interval": "Aktualisierungsintervall (Sekunden)"
+                    "scan_interval": "Aktualisierungsintervall (Sekunden)",
+                    "diagnostic_scan_interval": "Diagnose-Aktualisierungsintervall (Sekunden)",
+                    "configuration_scan_interval": "Konfigurations-Aktualisierungsintervall (Sekunden)"
                 }
             },
             "reconfigure": {
@@ -16,7 +18,9 @@
                 "data": {
                     "host": "IP-Adresse",
                     "token": "Auth-Token",
-                    "scan_interval": "Aktualisierungsintervall (Sekunden)"
+                    "scan_interval": "Aktualisierungsintervall (Sekunden)",
+                    "diagnostic_scan_interval": "Diagnose-Aktualisierungsintervall (Sekunden)",
+                    "configuration_scan_interval": "Konfigurations-Aktualisierungsintervall (Sekunden)"
                 }
             },
             "reauth_confirm": {
@@ -49,19 +53,45 @@
                     "discharging": "Entlädt"
                 }
             },
-            "consumption": { "name": "Verbrauch" },
-            "consumption_avg": { "name": "Verbrauch (Mittel)" },
-            "production": { "name": "Produktion" },
-            "grid_power": { "name": "Netz Ein/Aus" },
-            "grid_export": { "name": "Netzeinspeisung" },
-            "grid_import": { "name": "Netzbezug" },
-            "battery_power": { "name": "Batterie Laden/Entladen" },
-            "battery_charge": { "name": "Batterie Ladeleistung" },
-            "battery_discharge": { "name": "Batterie Entladeleistung" },
-            "soc_user": { "name": "Ladestand" },
-            "soc_real": { "name": "Ladestand (real)" },
-            "remaining_capacity": { "name": "Verbleibende Kapazität" },
-            "system_status": { "name": "Systemstatus" },
+            "consumption": {
+                "name": "Verbrauch"
+            },
+            "consumption_avg": {
+                "name": "Verbrauch (Mittel)"
+            },
+            "production": {
+                "name": "Produktion"
+            },
+            "grid_power": {
+                "name": "Netz Leistung"
+            },
+            "grid_export": {
+                "name": "Netzeinspeisung"
+            },
+            "grid_import": {
+                "name": "Netzbezug"
+            },
+            "battery_power": {
+                "name": "Batterie Leistung"
+            },
+            "battery_charge": {
+                "name": "Batterie Ladeleistung"
+            },
+            "battery_discharge": {
+                "name": "Batterie Entladeleistung"
+            },
+            "soc_user": {
+                "name": "Ladezustand"
+            },
+            "soc_real": {
+                "name": "Ladezustand (real)"
+            },
+            "remaining_capacity": {
+                "name": "Verbleibende Kapazität"
+            },
+            "system_status": {
+                "name": "Systemstatus"
+            },
             "operating_mode": {
                 "name": "Betriebsmodus",
                 "state": {
@@ -73,49 +103,120 @@
                     "automatic_optimization": "Automatic - Optimization"
                 }
             },
-            "frequency": { "name": "Netzfrequenz" },
-            "voltage_ac": { "name": "Netzspannung" },
-            "voltage_battery": { "name": "Batteriespannung" },
-            "backup_buffer": { "name": "Backup-Puffer" },
+            "frequency": {
+                "name": "Netzfrequenz"
+            },
+            "voltage_ac": {
+                "name": "Netzspannung"
+            },
+            "voltage_battery": {
+                "name": "Batteriespannung"
+            },
+            "backup_buffer": {
+                "name": "Backup-Puffer"
+            },
             "battery_care": {
-                "name": "Batterieschonung",
+                "name": "Batteriepflege",
                 "state": {
                     "active": "Aktiv",
                     "inactive": "Inaktiv"
                 }
             },
-            "inverter_temperature": { "name": "Wechselrichter-Temperatur" },
-            "pv_power": { "name": "PV-Leistung" },
-            "pv_voltage": { "name": "PV-Spannung" },
-            "pv_current": { "name": "PV-Strom" },
-            "battery_cycles": { "name": "Ladezyklen" },
-            "cell_temperature_max": { "name": "Zelltemperatur max." },
-            "system_dc_voltage": { "name": "Batterie-DC-Spannung" },
-            "module_count": { "name": "Anzahl Batteriemodule" },
-            "inverter_max_power": { "name": "Wechselrichter max. Leistung" },
-            "installed_capacity": { "name": "Installierte Kapazität" },
-            "battery_current": { "name": "Batteriestrom" },
-            "cell_temperature_min": { "name": "Zelltemperatur min." },
-            "cell_voltage_max": { "name": "Zellspannung max." },
-            "cell_voltage_min": { "name": "Zellspannung min." },
-            "full_charge_capacity": { "name": "Volle Ladekapazität" },
-            "state_of_health": { "name": "Batteriegesundheit" },
-            "pm_w_total": { "name": "{meter} Leistung gesamt" },
-            "pm_w_l1": { "name": "{meter} Leistung L1" },
-            "pm_w_l2": { "name": "{meter} Leistung L2" },
-            "pm_w_l3": { "name": "{meter} Leistung L3" },
-            "pm_a_l1": { "name": "{meter} Strom L1" },
-            "pm_a_l2": { "name": "{meter} Strom L2" },
-            "pm_a_l3": { "name": "{meter} Strom L3" },
-            "pm_v_l1_n": { "name": "{meter} Spannung L1-N" },
-            "pm_v_l2_n": { "name": "{meter} Spannung L2-N" },
-            "pm_v_l3_n": { "name": "{meter} Spannung L3-N" },
-            "pm_kwh_imported": { "name": "{meter} Energie bezogen" },
-            "pm_kwh_exported": { "name": "{meter} Energie eingespeist" }
+            "inverter_temperature": {
+                "name": "Wechselrichter-Temperatur"
+            },
+            "pv_power": {
+                "name": "PV-Leistung"
+            },
+            "pv_voltage": {
+                "name": "PV-Spannung"
+            },
+            "pv_current": {
+                "name": "PV-Strom"
+            },
+            "battery_cycles": {
+                "name": "Ladezyklen"
+            },
+            "cell_temperature_max": {
+                "name": "Zelltemperatur max."
+            },
+            "system_dc_voltage": {
+                "name": "Batterie-DC-Spannung"
+            },
+            "module_count": {
+                "name": "Anzahl Batteriemodule"
+            },
+            "inverter_max_power": {
+                "name": "Wechselrichter max. Leistung"
+            },
+            "installed_capacity": {
+                "name": "Installierte Kapazität"
+            },
+            "battery_current": {
+                "name": "Batteriestrom"
+            },
+            "cell_temperature_min": {
+                "name": "Zelltemperatur min."
+            },
+            "cell_voltage_max": {
+                "name": "Zellspannung max."
+            },
+            "cell_voltage_min": {
+                "name": "Zellspannung min."
+            },
+            "full_charge_capacity": {
+                "name": "Volle Ladekapazität"
+            },
+            "state_of_health": {
+                "name": "Batteriegesundheit"
+            },
+            "pm_w_total": {
+                "name": "{meter} Leistung gesamt"
+            },
+            "pm_w_l1": {
+                "name": "{meter} Leistung L1"
+            },
+            "pm_w_l2": {
+                "name": "{meter} Leistung L2"
+            },
+            "pm_w_l3": {
+                "name": "{meter} Leistung L3"
+            },
+            "pm_a_l1": {
+                "name": "{meter} Strom L1"
+            },
+            "pm_a_l2": {
+                "name": "{meter} Strom L2"
+            },
+            "pm_a_l3": {
+                "name": "{meter} Strom L3"
+            },
+            "pm_v_l1_n": {
+                "name": "{meter} Spannung L1-N"
+            },
+            "pm_v_l2_n": {
+                "name": "{meter} Spannung L2-N"
+            },
+            "pm_v_l3_n": {
+                "name": "{meter} Spannung L3-N"
+            },
+            "pm_kwh_imported": {
+                "name": "{meter} Energie bezogen"
+            },
+            "pm_kwh_exported": {
+                "name": "{meter} Energie eingespeist"
+            },
+            "software_version": {
+                "name": "Software Version"
+            }
         },
         "binary_sensor": {
-            "system_alarm": { "name": "Systemalarm" },
-            "system_warning": { "name": "Systemwarnung" }
+            "system_alarm": {
+                "name": "Systemalarm"
+            },
+            "system_warning": {
+                "name": "Systemwarnung"
+            }
         },
         "select": {
             "operating_mode": {
@@ -130,14 +231,26 @@
             }
         },
         "number": {
-            "force_charge": { "name": "Laden erzwingen" },
-            "force_discharge": { "name": "Entladen erzwingen" },
-            "battery_reserve": { "name": "Reserve (Backup-Puffer)" }
+            "force_charge": {
+                "name": "Laden erzwingen"
+            },
+            "force_discharge": {
+                "name": "Entladen erzwingen"
+            },
+            "battery_reserve": {
+                "name": "Reserve (Backup-Puffer)"
+            }
         },
         "button": {
-            "reset_all": { "name": "Laden/Entladen zurücksetzen" },
-            "reset_charge": { "name": "Zwangsladen zurücksetzen" },
-            "reset_discharge": { "name": "Zwangsentladen zurücksetzen" }
+            "reset_all": {
+                "name": "Laden/Entladen zurücksetzen"
+            },
+            "reset_charge": {
+                "name": "Zwangsladen zurücksetzen"
+            },
+            "reset_discharge": {
+                "name": "Zwangsentladen zurücksetzen"
+            }
         }
     }
 }

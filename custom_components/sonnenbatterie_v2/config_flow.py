@@ -1,4 +1,5 @@
 """Config flow for the sonnenBatterie v2 integration."""
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -6,7 +7,11 @@ from typing import Any
 
 import voluptuous as vol
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST, CONF_SCAN_INTERVAL, CONF_TOKEN
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_SCAN_INTERVAL,
+    CONF_TOKEN,
+)
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import (
@@ -15,7 +20,16 @@ from .api import (
     SonnenForbiddenError,
     SonnenV2Api,
 )
-from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, LOGGER, MIN_SCAN_INTERVAL
+from .const import (
+    CONF_DIAGNOSTIC_SCAN_INTERVAL,
+    CONF_CONFIGURATION_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+    DEFAULT_DIAGNOSTIC_SCAN_INTERVAL,
+    DEFAULT_CONFIGURATION_SCAN_INTERVAL,
+    DOMAIN,
+    LOGGER,
+    MIN_SCAN_INTERVAL,
+)
 
 
 def _schema(defaults: dict[str, Any]) -> vol.Schema:
@@ -26,6 +40,20 @@ def _schema(defaults: dict[str, Any]) -> vol.Schema:
             vol.Optional(
                 CONF_SCAN_INTERVAL,
                 default=defaults.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+            vol.Optional(
+                CONF_DIAGNOSTIC_SCAN_INTERVAL,
+                default=defaults.get(
+                    CONF_DIAGNOSTIC_SCAN_INTERVAL,
+                    DEFAULT_DIAGNOSTIC_SCAN_INTERVAL,
+                ),
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+            vol.Optional(
+                CONF_CONFIGURATION_SCAN_INTERVAL,
+                default=defaults.get(
+                    CONF_CONFIGURATION_SCAN_INTERVAL,
+                    DEFAULT_CONFIGURATION_SCAN_INTERVAL,
+                ),
             ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
         }
     )
@@ -48,7 +76,7 @@ class SonnenConfigFlow(ConfigFlow, domain=DOMAIN):
             user_input[CONF_TOKEN],
             async_get_clientsession(self.hass),
         )
-        await api.get_status()          # reachability (no token required)
+        await api.get_status()  # reachability (no token required)
         await api.get_configurations()  # validates the Auth-Token
 
     def _errors_for(self, err: Exception) -> dict[str, str]:
@@ -92,7 +120,9 @@ class SonnenConfigFlow(ConfigFlow, domain=DOMAIN):
             except Exception as err:  # noqa: BLE001
                 errors = self._errors_for(err)
             else:
-                return self.async_update_reload_and_abort(entry, data_updates=user_input)
+                return self.async_update_reload_and_abort(
+                    entry, data_updates=user_input
+                )
         return self.async_show_form(
             step_id="reconfigure",
             data_schema=_schema({**entry.data, **(user_input or {})}),
@@ -116,7 +146,9 @@ class SonnenConfigFlow(ConfigFlow, domain=DOMAIN):
             except Exception as err:  # noqa: BLE001
                 errors = self._errors_for(err)
             else:
-                return self.async_update_reload_and_abort(entry, data_updates=user_input)
+                return self.async_update_reload_and_abort(
+                    entry, data_updates=user_input
+                )
         return self.async_show_form(
             step_id="reauth_confirm",
             data_schema=_reauth_schema(),

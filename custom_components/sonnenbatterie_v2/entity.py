@@ -1,19 +1,20 @@
 """Base entity for the sonnenBatterie v2 integration."""
+
 from __future__ import annotations
 
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .coordinator import SonnenCoordinator
+from .coordinator import _SonnenBaseCoordinator
 
 
-class SonnenEntity(CoordinatorEntity[SonnenCoordinator]):
-    """Common base: device info + stable unique_id, name via has_entity_name."""
+class SonnenEntity(CoordinatorEntity[_SonnenBaseCoordinator]):
+    """Common base for entities using any sonnenBatterie coordinator."""
 
     _attr_has_entity_name = True
 
     def __init__(
-        self, coordinator: SonnenCoordinator, description: EntityDescription
+        self, coordinator: _SonnenBaseCoordinator, description: EntityDescription
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description

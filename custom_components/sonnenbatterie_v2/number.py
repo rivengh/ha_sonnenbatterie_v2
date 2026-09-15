@@ -1,4 +1,5 @@
 """Number platform: charge/discharge setpoints and battery reserve."""
+
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
@@ -38,7 +39,24 @@ class SonnenNumberEntityDescription(NumberEntityDescription):
     dynamic_max_from_inverter: bool = False
 
 
-NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
+STATUS_NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
+    SonnenNumberEntityDescription(
+        key="battery_reserve",
+        translation_key="battery_reserve",
+        icon="mdi:battery-lock",
+        entity_category=EntityCategory.CONFIG,
+        device_class=NumberDeviceClass.BATTERY,
+        native_unit_of_measurement=PERCENTAGE,
+        native_min_value=0,
+        native_max_value=100,
+        native_step=1,
+        mode=NumberMode.SLIDER,
+        value_fn=lambda d: _to_int(d["status"].get("BackupBuffer")),
+        set_fn=lambda api, v: api.set_configuration(CONF_EM_USOC, int(v)),
+    ),
+)
+
+CONFIGURATION_NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
     SonnenNumberEntityDescription(
         key="force_charge",
         translation_key="force_charge",
@@ -65,20 +83,6 @@ NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
         dynamic_max_from_inverter=True,
         set_fn=lambda api, v: api.set_setpoint("discharge", v),
     ),
-    SonnenNumberEntityDescription(
-        key="battery_reserve",
-        translation_key="battery_reserve",
-        icon="mdi:battery-lock",
-        entity_category=EntityCategory.CONFIG,
-        device_class=NumberDeviceClass.BATTERY,
-        native_unit_of_measurement=PERCENTAGE,
-        native_min_value=0,
-        native_max_value=100,
-        native_step=1,
-        mode=NumberMode.SLIDER,
-        value_fn=lambda d: _to_int(d["status"].get("BackupBuffer")),
-        set_fn=lambda api, v: api.set_configuration(CONF_EM_USOC, int(v)),
-    ),
 )
 
 
@@ -87,8 +91,19 @@ async def async_setup_entry(
     entry: SonnenConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    async_add_entities(SonnenNumber(coordinator, description) for description in NUMBERS)
+    """Set up sonnenBatterie number entities."""
+    runtime = entry.runtime_data
+    entities: list[SonnenNumber] = []
+    # Add number entities for default coordinator (status data)
+    entities.extend(
+        SonnenNumber(runtime.coordinator, description) for description in STATUS_NUMBERS
+    )
+    # Add number entities for configuration coordinator (configuration data)
+    entities.extend(
+        SonnenNumber(runtime.configuration_coordinator, description)
+        for description in CONFIGURATION_NUMBERS
+    )
+    async_add_entities(entities)
 
 
 class SonnenNumber(SonnenEntity, RestoreNumber):

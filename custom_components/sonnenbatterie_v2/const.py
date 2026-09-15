@@ -1,4 +1,5 @@
 """Constants for the sonnenBatterie (v2 API) integration."""
+
 from __future__ import annotations
 
 import logging
@@ -9,8 +10,13 @@ from homeassistant.const import Platform
 DOMAIN: Final = "sonnenbatterie_v2"
 LOGGER = logging.getLogger(__package__)
 
+CONF_DIAGNOSTIC_SCAN_INTERVAL = "diagnostic_scan_interval"
+CONF_CONFIGURATION_SCAN_INTERVAL = "configuration_scan_interval"
+
 DEFAULT_NAME: Final = "sonnenBatterie"
-DEFAULT_SCAN_INTERVAL: Final = 30
+DEFAULT_SCAN_INTERVAL: Final = 30  # 30s
+DEFAULT_DIAGNOSTIC_SCAN_INTERVAL: Final = 300  # 5m
+DEFAULT_CONFIGURATION_SCAN_INTERVAL: Final = 3600  # 1h
 MIN_SCAN_INTERVAL: Final = 5
 
 PLATFORMS: Final = [

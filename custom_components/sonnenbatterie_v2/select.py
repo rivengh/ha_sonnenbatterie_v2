@@ -1,4 +1,5 @@
 """Select platform: operating mode."""
+
 from __future__ import annotations
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
@@ -34,7 +35,9 @@ async def async_setup_entry(
     entry: SonnenConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    async_add_entities([SonnenOperatingModeSelect(entry.runtime_data, _DESCRIPTION)])
+    """Set up sonnenBatterie operating mode select."""
+    coordinator = entry.runtime_data.coordinator
+    async_add_entities([SonnenOperatingModeSelect(coordinator, _DESCRIPTION)])
 
 
 class SonnenOperatingModeSelect(SonnenEntity, SelectEntity):

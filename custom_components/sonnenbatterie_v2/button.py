@@ -1,4 +1,5 @@
 """Button platform: reset charge/discharge setpoints to 0."""
+
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
@@ -55,16 +56,24 @@ async def async_setup_entry(
     entry: SonnenConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    coordinator = entry.runtime_data
-    async_add_entities(SonnenButton(coordinator, description) for description in BUTTONS)
+    """Set up sonnenBatterie control buttons."""
+    # Use the default coordinator for API access and post-command refreshes.
+    coordinator = entry.runtime_data.coordinator
+    async_add_entities(
+        SonnenButton(coordinator, description) for description in BUTTONS
+    )
 
 
 class SonnenButton(SonnenEntity, ButtonEntity):
+    """A sonnenBatterie control button."""
+
     entity_description: SonnenButtonEntityDescription
 
     async def async_press(self) -> None:
         try:
+            # The command is sent through the API shared by all coordinators.
             await self.entity_description.press_fn(self.coordinator.api)
         except SonnenApiError as err:
             raise HomeAssistantError(f"Action failed: {err}") from err
+        # Immediately update status after changing the setpoint.
         await self.coordinator.async_request_refresh()

@@ -1,4 +1,5 @@
 """Lightweight async client for the documented sonnenBatterie /api/v2 endpoints."""
+
 from __future__ import annotations
 
 import asyncio
@@ -53,7 +54,9 @@ class SonnenV2Api:
                 method, url, headers=headers, timeout=_TIMEOUT, **kwargs
             ) as resp:
                 if resp.status == 401:
-                    raise SonnenAuthError(f"Unauthorized for {path} (invalid Auth-Token?)")
+                    raise SonnenAuthError(
+                        f"Unauthorized for {path} (invalid Auth-Token?)"
+                    )
                 if resp.status == 403:
                     raise SonnenForbiddenError(
                         f"Forbidden for {path}: {await _safe_text(resp)}"
@@ -65,7 +68,9 @@ class SonnenV2Api:
         except (SonnenAuthError, SonnenForbiddenError):
             raise
         except aiohttp.ClientResponseError as err:
-            raise SonnenApiError(f"HTTP {err.status} for {path}: {err.message}") from err
+            raise SonnenApiError(
+                f"HTTP {err.status} for {path}: {err.message}"
+            ) from err
         except (aiohttp.ClientError, asyncio.TimeoutError) as err:
             raise SonnenConnectionError(f"Cannot connect to {url}: {err}") from err
 
