@@ -24,7 +24,7 @@ _OPTIONS = [
 _DESCRIPTION = SelectEntityDescription(
     key="operating_mode_select",
     translation_key="operating_mode",
-    icon="mdi:solar-power",
+    icon="mdi:state-machine",
     entity_category=EntityCategory.CONFIG,
     options=_OPTIONS,
 )

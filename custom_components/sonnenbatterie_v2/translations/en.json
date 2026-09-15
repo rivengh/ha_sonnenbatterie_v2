@@ -87,7 +87,7 @@
                 "name": "Charge (real)"
             },
             "remaining_capacity": {
-                "name": "Remaining capacity"
+                "name": "Remaining capacity (real)"
             },
             "system_status": {
                 "name": "System status"
@@ -139,9 +139,6 @@
             },
             "cell_temperature_max": {
                 "name": "Max cell temperature"
-            },
-            "system_dc_voltage": {
-                "name": "Battery DC voltage"
             },
             "module_count": {
                 "name": "Battery module count"
@@ -232,13 +229,13 @@
         },
         "number": {
             "force_charge": {
-                "name": "Force charge"
+                "name": "Manual charge"
             },
             "force_discharge": {
-                "name": "Force discharge"
+                "name": "Manual discharge"
             },
             "battery_reserve": {
-                "name": "Battery reserve"
+                "name": "Backup buffer"
             }
         },
         "button": {
@@ -246,10 +243,10 @@
                 "name": "Reset charge/discharge"
             },
             "reset_charge": {
-                "name": "Reset forced charge"
+                "name": "Reset manual charge"
             },
             "reset_discharge": {
-                "name": "Reset forced discharge"
+                "name": "Reset manual discharge"
             }
         }
     }

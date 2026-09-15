@@ -87,7 +87,7 @@
                 "name": "Ladezustand (real)"
             },
             "remaining_capacity": {
-                "name": "Verbleibende Kapazität"
+                "name": "Verbleibende Kapazität (real)"
             },
             "system_status": {
                 "name": "Systemstatus"
@@ -123,7 +123,7 @@
                 }
             },
             "inverter_temperature": {
-                "name": "Wechselrichter-Temperatur"
+                "name": "Wechselrichter Temperatur"
             },
             "pv_power": {
                 "name": "PV-Leistung"
@@ -139,9 +139,6 @@
             },
             "cell_temperature_max": {
                 "name": "Zelltemperatur max."
-            },
-            "system_dc_voltage": {
-                "name": "Batterie-DC-Spannung"
             },
             "module_count": {
                 "name": "Anzahl Batteriemodule"
@@ -232,13 +229,13 @@
         },
         "number": {
             "force_charge": {
-                "name": "Laden erzwingen"
+                "name": "Manuelles Laden"
             },
             "force_discharge": {
-                "name": "Entladen erzwingen"
+                "name": "Manuelles Entladen"
             },
             "battery_reserve": {
-                "name": "Reserve (Backup-Puffer)"
+                "name": "Backup-Puffer"
             }
         },
         "button": {
@@ -246,10 +243,10 @@
                 "name": "Laden/Entladen zurücksetzen"
             },
             "reset_charge": {
-                "name": "Zwangsladen zurücksetzen"
+                "name": "Manuelles Laden zurücksetzen"
             },
             "reset_discharge": {
-                "name": "Zwangsentladen zurücksetzen"
+                "name": "Manuelles Entladen zurücksetzen"
             }
         }
     }
