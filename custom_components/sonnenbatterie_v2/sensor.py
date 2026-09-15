@@ -206,7 +206,14 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         translation_key="operating_mode",
         icon="mdi:state-machine",
         device_class=SensorDeviceClass.ENUM,
-        options=["manual", "self_consumption", "testing", "module_extension", "time_of_use", "automatic_optimization"],
+        options=[
+            "manual",
+            "self_consumption",
+            "testing",
+            "module_extension",
+            "time_of_use",
+            "automatic_optimization",
+        ],
         value_fn=lambda d: OPERATING_MODES_REVERSE.get(
             str(d["status"].get("OperatingMode"))
         ),
@@ -229,7 +236,7 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
-        value_fn=lambda d: _round(d["status"].get("Uac"), 1),
+        value_fn=lambda d: d["status"].get("Uac"),
     ),
     SonnenSensorEntityDescription(
         key="voltage_battery",
@@ -239,7 +246,7 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
-        value_fn=lambda d: _round(d["status"].get("Ubat"), 1),
+        value_fn=lambda d: d["status"].get("Ubat"),
     ),
     SonnenSensorEntityDescription(
         key="backup_buffer",
@@ -248,7 +255,7 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda d: _to_int(d["status"].get("BackupBuffer")),
+        value_fn=lambda d: d["status"].get("BackupBuffer"),
     ),
     SonnenSensorEntityDescription(
         key="battery_care",
@@ -257,7 +264,9 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.ENUM,
         options=["active", "inactive"],
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda d: "active" if d["status"].get("dischargeNotAllowed") else "inactive",
+        value_fn=lambda d: (
+            "active" if d["status"].get("dischargeNotAllowed") else "inactive"
+        ),
     ),
     # --- inverter -----------------------------------------------------------
     SonnenSensorEntityDescription(
@@ -278,6 +287,7 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfPower.WATT,
         entity_registry_enabled_default=False,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: _round(d["inverter"].get("ppv"), 1),
     ),
     SonnenSensorEntityDescription(
@@ -306,6 +316,7 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         translation_key="battery_cycles",
         icon="mdi:battery-sync",
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: d["battery"].get("cyclecount"),
     ),
@@ -326,6 +337,7 @@ SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+        suggested_display_precision=2,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
         value_fn=lambda d: _round(d["battery"].get("systemdcvoltage"), 2),
