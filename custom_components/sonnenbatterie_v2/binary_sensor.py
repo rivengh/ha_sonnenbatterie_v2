@@ -35,6 +35,14 @@ def _flag(data: dict[str, Any], key: str) -> bool | None:
 # Names are provided via translations (entity.binary_sensor.<key>.name).
 BINARY_SENSORS: tuple[SonnenBinarySensorEntityDescription, ...] = (
     SonnenBinarySensorEntityDescription(
+        key="balance_charge_request",
+        translation_key="balance_charge_request",
+        icon="mdi:battery-arrow-up",
+        device_class=BinarySensorDeviceClass.RUNNING,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda d: _flag(d, "balancechargerequest"),
+    ),
+    SonnenBinarySensorEntityDescription(
         key="system_alarm",
         translation_key="system_alarm",
         device_class=BinarySensorDeviceClass.PROBLEM,

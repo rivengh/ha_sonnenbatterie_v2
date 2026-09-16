@@ -213,6 +213,9 @@
             },
             "system_warning": {
                 "name": "Systemwarnung"
+            },
+            "balance_charge_request": {
+                "name": "Ausgleichsladen"
             }
         },
         "select": {

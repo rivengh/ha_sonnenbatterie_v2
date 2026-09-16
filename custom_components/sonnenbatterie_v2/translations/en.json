@@ -213,6 +213,9 @@
             },
             "system_warning": {
                 "name": "System warning"
+            },
+            "balance_charge_request": {
+                "name": "Balance charge"
             }
         },
         "select": {
