@@ -66,12 +66,9 @@ def _to_int(value: Any) -> int | None:
     except (TypeError, ValueError):
         return None
 
-def _invert_int(value: Any) -> int | None:
-    """Invert an int value by flipping its sign."""
-    try:
-        return -int(value)
-    except (TypeError, ValueError):
-        return None
+def _invert(value: Any) -> int | float | None:
+    """Invert an integer or floating-point value."""
+    return -value if isinstance(value, (int, float)) else None
 
 
 def _remaining_wh(d: dict[str, Any]) -> StateType:
@@ -127,7 +124,7 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfPower.WATT,
-        value_fn=lambda d: _invert_int(d["status"].get("GridFeedIn_W")),
+        value_fn=lambda d: _invert(d["status"].get("GridFeedIn_W")),
     ),
     SonnenSensorEntityDescription(
         key="grid_export",
@@ -235,7 +232,7 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
-        value_fn=lambda d: d["status"].get("Ubat"),
+        value_fn=lambda d: _round(d["status"].get("Ubat"), 1),
     ),
     SonnenSensorEntityDescription(
         key="frequency",
@@ -252,7 +249,7 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
-        value_fn=lambda d: d["status"].get("Uac"),
+        value_fn=lambda d: _round(d["status"].get("Uac"), 1),
     ),
     SonnenSensorEntityDescription(
         key="backup_buffer",
@@ -400,7 +397,6 @@ DIAGNOSTIC_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         key="state_of_health",
         translation_key="state_of_health",
         icon="mdi:battery-heart-variant",
-        device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=PERCENTAGE,
         suggested_display_precision=0,
