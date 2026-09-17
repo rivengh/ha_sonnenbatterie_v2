@@ -7,6 +7,7 @@
                 "data": {
                     "host": "IP address",
                     "token": "Auth-Token",
+                    "expose_powermeter_sensors": "Expose power-meter sensors",
                     "scan_interval": "Update interval (seconds)",
                     "diagnostic_scan_interval": "Diagnostic update interval (seconds)",
                     "configuration_scan_interval": "Configuration update interval (seconds)"
@@ -18,6 +19,7 @@
                 "data": {
                     "host": "IP address",
                     "token": "Auth-Token",
+                    "expose_powermeter_sensors": "Expose power-meter sensors",
                     "scan_interval": "Update interval (seconds)",
                     "diagnostic_scan_interval": "Diagnostic update interval (seconds)",
                     "configuration_scan_interval": "Configuration update interval (seconds)"

@@ -12,6 +12,7 @@ LOGGER = logging.getLogger(__package__)
 
 CONF_DIAGNOSTIC_SCAN_INTERVAL = "diagnostic_scan_interval"
 CONF_CONFIGURATION_SCAN_INTERVAL = "configuration_scan_interval"
+CONF_EXPOSE_POWERMETER_SENSORS = "expose_powermeter_sensors"
 
 DEFAULT_NAME: Final = "sonnenBatterie"
 DEFAULT_SCAN_INTERVAL: Final = 30  # 30s

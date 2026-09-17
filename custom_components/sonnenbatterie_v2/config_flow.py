@@ -13,6 +13,7 @@ from homeassistant.const import (
     CONF_TOKEN,
 )
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.selector import BooleanSelector
 
 from .api import (
     SonnenAuthError,
@@ -29,6 +30,7 @@ from .const import (
     DOMAIN,
     LOGGER,
     MIN_SCAN_INTERVAL,
+    CONF_EXPOSE_POWERMETER_SENSORS,
 )
 
 
@@ -55,6 +57,10 @@ def _schema(defaults: dict[str, Any]) -> vol.Schema:
                     DEFAULT_CONFIGURATION_SCAN_INTERVAL,
                 ),
             ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+            vol.Optional(
+                CONF_EXPOSE_POWERMETER_SENSORS,
+                default=False,
+            ): BooleanSelector(),
         }
     )
 

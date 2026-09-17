@@ -27,7 +27,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 
 from . import SonnenConfigEntry
-from .const import OPERATING_MODES_REVERSE
+from .const import (
+    CONF_EXPOSE_POWERMETER_SENSORS,
+    OPERATING_MODES_REVERSE,
+)
 from .coordinator import SonnenCoordinator
 from .entity import SonnenEntity
 
@@ -65,6 +68,7 @@ def _to_int(value: Any) -> int | None:
         return int(value)
     except (TypeError, ValueError):
         return None
+
 
 def _invert(value: Any) -> int | float | None:
     """Invert an integer or floating-point value."""
@@ -550,10 +554,11 @@ async def async_setup_entry(
         for description in CONFIGURATION_SENSORS
     )
 
-    entities.extend(
-        SonnenSensor(runtime.diagnostic_coordinator, description)
-        for description in _powermeter_descriptions(runtime.diagnostic_coordinator)
-    )
+    if entry.data.get(CONF_EXPOSE_POWERMETER_SENSORS, True):
+        entities.extend(
+            SonnenSensor(runtime.diagnostic_coordinator, description)
+            for description in _powermeter_descriptions(runtime.diagnostic_coordinator)
+        )
 
     async_add_entities(entities)
 

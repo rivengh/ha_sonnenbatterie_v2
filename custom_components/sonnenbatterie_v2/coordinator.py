@@ -13,7 +13,12 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import SonnenApiError, SonnenAuthError, SonnenV2Api
-from .const import DEFAULT_NAME, DOMAIN, LOGGER
+from .const import (
+    CONF_EXPOSE_POWERMETER_SENSORS,
+    DEFAULT_NAME,
+    DOMAIN,
+    LOGGER,
+)
 
 
 class _SonnenBaseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -104,11 +109,18 @@ class SonnenDiagnosticCoordinator(_SonnenBaseCoordinator):
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch diagnostic endpoints concurrently."""
         try:
-            inverter, powermeter, battery = await asyncio.gather(
-                self.api.get_inverter(),
-                self.api.get_powermeter(),
-                self.api.get_battery(),
-            )
+            if self.config_entry.data.get(CONF_EXPOSE_POWERMETER_SENSORS, True):
+                inverter, battery, powermeter = await asyncio.gather(
+                    self.api.get_inverter(),
+                    self.api.get_battery(),
+                    self.api.get_powermeter(),
+                )
+            else:
+                inverter, battery = await asyncio.gather(
+                    self.api.get_inverter(),
+                    self.api.get_battery(),
+                )
+                powermeter = []
         except Exception as err:
             self._raise_api_error(err)
 

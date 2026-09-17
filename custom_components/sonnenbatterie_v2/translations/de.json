@@ -7,6 +7,7 @@
                 "data": {
                     "host": "IP-Adresse",
                     "token": "Auth-Token",
+                    "expose_powermeter_sensors": "Leistungsmesssensoren aktivieren",
                     "scan_interval": "Aktualisierungsintervall (Sekunden)",
                     "diagnostic_scan_interval": "Diagnose-Aktualisierungsintervall (Sekunden)",
                     "configuration_scan_interval": "Konfigurations-Aktualisierungsintervall (Sekunden)"
@@ -18,6 +19,7 @@
                 "data": {
                     "host": "IP-Adresse",
                     "token": "Auth-Token",
+                    "expose_powermeter_sensors": "Leistungsmesssensoren aktivieren",
                     "scan_interval": "Aktualisierungsintervall (Sekunden)",
                     "diagnostic_scan_interval": "Diagnose-Aktualisierungsintervall (Sekunden)",
                     "configuration_scan_interval": "Konfigurations-Aktualisierungsintervall (Sekunden)"
