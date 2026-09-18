@@ -77,10 +77,10 @@
                 "name": "Battery power"
             },
             "battery_charge": {
-                "name": "Battery charge power"
+                "name": "Charge power"
             },
             "battery_discharge": {
-                "name": "Battery discharge power"
+                "name": "Discharge power"
             },
             "soc_user": {
                 "name": "State of charge"

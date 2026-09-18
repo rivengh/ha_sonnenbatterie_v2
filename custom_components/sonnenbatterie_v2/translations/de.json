@@ -65,7 +65,7 @@
                 "name": "Produktion"
             },
             "grid_power": {
-                "name": "Netz Leistung"
+                "name": "Netzleistung"
             },
             "grid_export": {
                 "name": "Netzeinspeisung"
@@ -74,13 +74,13 @@
                 "name": "Netzbezug"
             },
             "battery_power": {
-                "name": "Batterie Leistung"
+                "name": "Batterieleistung"
             },
             "battery_charge": {
-                "name": "Batterie Ladeleistung"
+                "name": "Ladeleistung"
             },
             "battery_discharge": {
-                "name": "Batterie Entladeleistung"
+                "name": "Entladeleistung"
             },
             "soc_user": {
                 "name": "Ladezustand"
