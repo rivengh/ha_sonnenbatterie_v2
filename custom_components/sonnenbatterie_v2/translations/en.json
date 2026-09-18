@@ -59,22 +59,22 @@
                 "name": "Consumption"
             },
             "consumption_avg": {
-                "name": "Consumption (average)"
+                "name": "Avg. consumption (60s)"
             },
             "production": {
                 "name": "Production"
             },
             "grid_power": {
-                "name": "Grid in/out"
+                "name": "Grid power"
             },
             "grid_export": {
-                "name": "Grid feed-in"
+                "name": "Grid export"
             },
             "grid_import": {
-                "name": "Grid consumption"
+                "name": "Grid import"
             },
             "battery_power": {
-                "name": "Battery charge/discharge"
+                "name": "Battery power"
             },
             "battery_charge": {
                 "name": "Battery charge power"
@@ -83,13 +83,13 @@
                 "name": "Battery discharge power"
             },
             "soc_user": {
-                "name": "Charge"
+                "name": "State of charge"
             },
-            "soc_real": {
-                "name": "Charge (real)"
+            "soc_relative": {
+                "name": "State of charge (relative)"
             },
             "remaining_capacity": {
-                "name": "Remaining capacity (real)"
+                "name": "Remaining capacity (relative)"
             },
             "system_status": {
                 "name": "System status"
@@ -105,8 +105,8 @@
                     "automatic_optimization": "Automatic - Optimization"
                 }
             },
-            "frequency": {
-                "name": "Grid frequency"
+            "frequency_ac": {
+                "name": "AC frequency"
             },
             "voltage_ac": {
                 "name": "AC voltage"
@@ -139,20 +139,14 @@
             "battery_cycles": {
                 "name": "Battery cycles"
             },
+            "system_dc_current": {
+                "name": "System DC current"
+            },
+            "system_dc_coltage": {
+                "name": "System DC voltage"
+            },
             "cell_temperature_max": {
                 "name": "Max cell temperature"
-            },
-            "module_count": {
-                "name": "Battery module count"
-            },
-            "inverter_max_power": {
-                "name": "Inverter max power"
-            },
-            "installed_capacity": {
-                "name": "Installed capacity"
-            },
-            "battery_current": {
-                "name": "Battery current"
             },
             "cell_temperature_min": {
                 "name": "Min cell temperature"
@@ -168,6 +162,15 @@
             },
             "state_of_health": {
                 "name": "State of health"
+            },
+            "module_count": {
+                "name": "Battery Module count"
+            },
+            "inverter_max_power": {
+                "name": "Inverter max power"
+            },
+            "installed_capacity": {
+                "name": "Installed capacity"
             },
             "pm_w_total": {
                 "name": "{meter} total power"

@@ -59,7 +59,7 @@
                 "name": "Verbrauch"
             },
             "consumption_avg": {
-                "name": "Verbrauch (Mittel)"
+                "name": "Durchschnittlicher Verbrauch (60s)"
             },
             "production": {
                 "name": "Produktion"
@@ -85,11 +85,11 @@
             "soc_user": {
                 "name": "Ladezustand"
             },
-            "soc_real": {
-                "name": "Ladezustand (real)"
+            "soc_relative": {
+                "name": "Ladezustand (relativ)"
             },
             "remaining_capacity": {
-                "name": "Verbleibende Kapazität (real)"
+                "name": "Verbleibende Kapazität (relativ)"
             },
             "system_status": {
                 "name": "Systemstatus"
@@ -105,7 +105,7 @@
                     "automatic_optimization": "Automatic - Optimization"
                 }
             },
-            "frequency": {
+            "frequency_ac": {
                 "name": "Netzfrequenz"
             },
             "voltage_ac": {
@@ -139,20 +139,14 @@
             "battery_cycles": {
                 "name": "Ladezyklen"
             },
+            "system_dc_voltage": {
+                "name": "System DC Spannung"
+            },
+            "system_dc_current": {
+                "name": "System DC Strom"
+            },
             "cell_temperature_max": {
                 "name": "Zelltemperatur max."
-            },
-            "module_count": {
-                "name": "Anzahl Batteriemodule"
-            },
-            "inverter_max_power": {
-                "name": "Wechselrichter max. Leistung"
-            },
-            "installed_capacity": {
-                "name": "Installierte Kapazität"
-            },
-            "battery_current": {
-                "name": "Batteriestrom"
             },
             "cell_temperature_min": {
                 "name": "Zelltemperatur min."
@@ -168,6 +162,15 @@
             },
             "state_of_health": {
                 "name": "Batteriegesundheit"
+            },
+            "module_count": {
+                "name": "Anzahl Batteriemodule"
+            },
+            "inverter_max_power": {
+                "name": "Wechselrichter max. Leistung"
+            },
+            "installed_capacity": {
+                "name": "Installierte Kapazität"
             },
             "pm_w_total": {
                 "name": "{meter} Leistung gesamt"
