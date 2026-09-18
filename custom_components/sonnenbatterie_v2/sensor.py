@@ -264,17 +264,6 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: d["status"].get("BackupBuffer"),
     ),
-    SonnenSensorEntityDescription(
-        key="battery_care",
-        translation_key="battery_care",
-        icon="mdi:wrench-clock",
-        device_class=SensorDeviceClass.ENUM,
-        options=["active", "inactive"],
-        entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda d: (
-            "active" if d["status"].get("dischargeNotAllowed") else "inactive"
-        ),
-    ),
 )
 
 DIAGNOSTIC_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (

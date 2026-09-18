@@ -117,13 +117,6 @@
             "backup_buffer": {
                 "name": "Backup-Puffer"
             },
-            "battery_care": {
-                "name": "Batteriepflege",
-                "state": {
-                    "active": "Aktiv",
-                    "inactive": "Inaktiv"
-                }
-            },
             "inverter_temperature": {
                 "name": "Wechselrichter Temperatur"
             },
@@ -213,14 +206,17 @@
             }
         },
         "binary_sensor": {
+            "battery_care": {
+                "name": "Batteriepflege"
+            },
+            "balance_charge_request": {
+                "name": "Ausgleichsladen"
+            },
             "system_alarm": {
                 "name": "Systemalarm"
             },
             "system_warning": {
                 "name": "Systemwarnung"
-            },
-            "balance_charge_request": {
-                "name": "Ausgleichsladen"
             }
         },
         "select": {

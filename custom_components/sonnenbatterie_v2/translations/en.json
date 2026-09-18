@@ -117,13 +117,6 @@
             "backup_buffer": {
                 "name": "Backup buffer"
             },
-            "battery_care": {
-                "name": "Battery care",
-                "state": {
-                    "active": "Active",
-                    "inactive": "Inactive"
-                }
-            },
             "inverter_temperature": {
                 "name": "Inverter temperature"
             },
@@ -213,14 +206,17 @@
             }
         },
         "binary_sensor": {
+            "battery_care": {
+                "name": "Battery care"
+            },
+            "balance_charge_request": {
+                "name": "Balance charge"
+            },
             "system_alarm": {
                 "name": "System alarm"
             },
             "system_warning": {
                 "name": "System warning"
-            },
-            "balance_charge_request": {
-                "name": "Balance charge"
             }
         },
         "select": {
