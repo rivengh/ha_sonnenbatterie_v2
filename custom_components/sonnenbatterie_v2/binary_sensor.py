@@ -45,7 +45,6 @@ STATUS_BINARY_SENSORS: tuple[SonnenBinarySensorEntityDescription, ...] = (
         translation_key="battery_care",
         icon="mdi:wrench-clock",
         device_class=BinarySensorDeviceClass.RUNNING,
-        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: _status_flag(d, "dischargeNotAllowed"),
     ),
 )

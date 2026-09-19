@@ -199,7 +199,6 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
     SonnenSensorEntityDescription(
         key="remaining_capacity",
         translation_key="remaining_capacity",
-        # icon="mdi:battery",
         device_class=SensorDeviceClass.ENERGY_STORAGE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
@@ -208,7 +207,7 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
     SonnenSensorEntityDescription(
         key="system_status",
         translation_key="system_status",
-        icon="mdi:battery-check-outline",
+        icon="mdi:transmission-tower",
         value_fn=lambda d: (
             v.lower() if isinstance(v := d["status"].get("SystemStatus"), str) else None
         ),
@@ -261,7 +260,6 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         icon="mdi:battery-lock",
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=PERCENTAGE,
-        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: d["status"].get("BackupBuffer"),
     ),
 )

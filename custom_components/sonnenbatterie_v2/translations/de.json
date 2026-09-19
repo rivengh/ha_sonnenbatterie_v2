@@ -65,22 +65,22 @@
                 "name": "Produktion"
             },
             "grid_power": {
-                "name": "Netzleistung"
+                "name": "Netz Leistung"
             },
             "grid_export": {
-                "name": "Netzeinspeisung"
+                "name": "Netz Export Leistung"
             },
             "grid_import": {
-                "name": "Netzbezug"
+                "name": "Netz Import Leistung"
             },
             "battery_power": {
-                "name": "Batterieleistung"
+                "name": "AC Leistung"
             },
             "battery_charge": {
-                "name": "Ladeleistung"
+                "name": "AC Laden Leistung"
             },
             "battery_discharge": {
-                "name": "Entladeleistung"
+                "name": "AC Entladen Leistung"
             },
             "soc_user": {
                 "name": "Ladezustand"
@@ -92,7 +92,7 @@
                 "name": "Verbleibende Kapazität (relativ)"
             },
             "system_status": {
-                "name": "Systemstatus"
+                "name": "Netz Status"
             },
             "operating_mode": {
                 "name": "Betriebsmodus",
@@ -106,103 +106,103 @@
                 }
             },
             "frequency_ac": {
-                "name": "Netzfrequenz"
+                "name": "AC Frequenz"
             },
             "voltage_ac": {
-                "name": "Netzspannung"
+                "name": "AC Spannung"
             },
             "voltage_battery": {
-                "name": "Batteriespannung"
+                "name": "DC Spannung"
             },
             "backup_buffer": {
                 "name": "Backup-Puffer"
             },
             "inverter_temperature": {
-                "name": "Wechselrichter Temperatur"
+                "name": "Wechselrichter > Temperatur"
             },
             "pv_power": {
-                "name": "PV-Leistung"
+                "name": "Wechselrichter > PV Leistung"
             },
             "pv_voltage": {
-                "name": "PV-Spannung"
+                "name": "Wechselrichter > PV Spannung"
             },
             "pv_current": {
-                "name": "PV-Strom"
+                "name": "Wechselrichter > PV Strom"
             },
             "battery_cycles": {
-                "name": "Ladezyklen"
-            },
-            "system_dc_voltage": {
-                "name": "System DC Spannung"
+                "name": "Batterie > Ladezyklen"
             },
             "system_dc_current": {
-                "name": "System DC Strom"
+                "name": "Batterie > DC Strom"
+            },
+            "system_dc_voltage": {
+                "name": "Batterie > DC Spannung"
             },
             "cell_temperature_max": {
-                "name": "Zelltemperatur max."
+                "name": "Batterie > Maximale Zelltemperatur"
             },
             "cell_temperature_min": {
-                "name": "Zelltemperatur min."
+                "name": "Batterie > Minimale Zelltemperatur"
             },
             "cell_voltage_max": {
-                "name": "Zellspannung max."
+                "name": "Batterie > Maximale Zellspannung"
             },
             "cell_voltage_min": {
-                "name": "Zellspannung min."
+                "name": "Batterie > Minimale Zellspannung"
             },
             "full_charge_capacity": {
-                "name": "Volle Ladekapazität"
+                "name": "Batterie > Volle Ladekapazität"
             },
             "state_of_health": {
-                "name": "Batteriegesundheit"
+                "name": "Batterie > Gesundheitszustand"
             },
             "module_count": {
-                "name": "Anzahl Batteriemodule"
+                "name": "Konfig. > Batteriemodule"
             },
             "inverter_max_power": {
-                "name": "Wechselrichter max. Leistung"
+                "name": "Konfig. > Wechselrichter Max. Leistung"
             },
             "installed_capacity": {
-                "name": "Installierte Kapazität"
-            },
-            "pm_w_total": {
-                "name": "{meter} Leistung gesamt"
-            },
-            "pm_w_l1": {
-                "name": "{meter} Leistung L1"
-            },
-            "pm_w_l2": {
-                "name": "{meter} Leistung L2"
-            },
-            "pm_w_l3": {
-                "name": "{meter} Leistung L3"
-            },
-            "pm_a_l1": {
-                "name": "{meter} Strom L1"
-            },
-            "pm_a_l2": {
-                "name": "{meter} Strom L2"
-            },
-            "pm_a_l3": {
-                "name": "{meter} Strom L3"
-            },
-            "pm_v_l1_n": {
-                "name": "{meter} Spannung L1-N"
-            },
-            "pm_v_l2_n": {
-                "name": "{meter} Spannung L2-N"
-            },
-            "pm_v_l3_n": {
-                "name": "{meter} Spannung L3-N"
-            },
-            "pm_kwh_imported": {
-                "name": "{meter} Energie bezogen"
-            },
-            "pm_kwh_exported": {
-                "name": "{meter} Energie eingespeist"
+                "name": "Konfig. > Installierte Kapazität"
             },
             "software_version": {
-                "name": "Software Version"
+                "name": "Konfig. > Software Version"
+            },
+            "pm_w_total": {
+                "name": "Zähler > {meter} Gesamtleistung"
+            },
+            "pm_w_l1": {
+                "name": "Zähler > {meter} Leistung L1"
+            },
+            "pm_w_l2": {
+                "name": "Zähler > {meter} Leistung L2"
+            },
+            "pm_w_l3": {
+                "name": "Zähler > {meter} Leistung L3"
+            },
+            "pm_a_l1": {
+                "name": "Zähler > {meter} Strom L1"
+            },
+            "pm_a_l2": {
+                "name": "Zähler > {meter} Strom L2"
+            },
+            "pm_a_l3": {
+                "name": "Zähler > {meter} Strom L3"
+            },
+            "pm_v_l1_n": {
+                "name": "Zähler > {meter} Spannung L1-N"
+            },
+            "pm_v_l2_n": {
+                "name": "Zähler > {meter} Spannung L2-N"
+            },
+            "pm_v_l3_n": {
+                "name": "Zähler > {meter} Spannung L3-N"
+            },
+            "pm_kwh_imported": {
+                "name": "Zähler > {meter} Energie Importiert"
+            },
+            "pm_kwh_exported": {
+                "name": "Zähler > {meter} Energie Exportiert"
             }
         },
         "binary_sensor": {
@@ -210,23 +210,23 @@
                 "name": "Batteriepflege"
             },
             "balance_charge_request": {
-                "name": "Ausgleichsladen"
+                "name": "Batterie > Ausgleichsladen"
             },
             "system_alarm": {
-                "name": "Systemalarm"
+                "name": "Batterie > Systemalarm"
             },
             "system_warning": {
-                "name": "Systemwarnung"
+                "name": "Batterie > Systemwarnung"
             }
         },
         "select": {
             "operating_mode": {
                 "name": "Betriebsmodus",
                 "state": {
-                    "self_consumption": "Eigenverbrauch",
-                    "automatic_optimization": "Automatic - Optimization",
-                    "module_extension": "Modul-Erweiterung",
-                    "time_of_use": "Time-of-Use",
+                    "self_consumption": "Automatisch - Eigenverbrauch",
+                    "automatic_optimization": "Automatisch - Optimierung",
+                    "module_extension": "Batteriemodul-Erweiterung",
+                    "time_of_use": "Zeitfenster",
                     "manual": "Manuell"
                 }
             }
