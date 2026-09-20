@@ -154,16 +154,16 @@
                 "name": "Battery > State of Health"
             },
             "module_count": {
-                "name": "Config > Battery Modules"
+                "name": "System > Battery Module Count"
             },
             "inverter_max_power": {
-                "name": "Config > Inverter Max. Power"
+                "name": "System > Inverter Max. Power"
             },
             "installed_capacity": {
-                "name": "Config > Installed Capacity"
+                "name": "System > Installed Capacity"
             },
             "software_version": {
-                "name": "Config > Software Version"
+                "name": "System > Software Version"
             },
             "pm_w_total": {
                 "name": "Meter > {meter} Total Power"

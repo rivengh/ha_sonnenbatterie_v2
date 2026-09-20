@@ -154,16 +154,16 @@
                 "name": "Batterie > Gesundheitszustand"
             },
             "module_count": {
-                "name": "Konfig. > Batteriemodule"
+                "name": "System > Anzahl Batteriemodule"
             },
             "inverter_max_power": {
-                "name": "Konfig. > Wechselrichter Max. Leistung"
+                "name": "System > Wechselrichter Max. Leistung"
             },
             "installed_capacity": {
-                "name": "Konfig. > Installierte Kapazität"
+                "name": "System > Installierte Kapazität"
             },
             "software_version": {
-                "name": "Konfig. > Software Version"
+                "name": "System > Software Version"
             },
             "pm_w_total": {
                 "name": "Zähler > {meter} Gesamtleistung"
