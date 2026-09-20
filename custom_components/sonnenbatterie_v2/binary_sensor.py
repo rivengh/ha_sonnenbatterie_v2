@@ -38,7 +38,7 @@ def _status_flag(data: dict[str, Any], key: str) -> bool | None:
     return bool(value) if value is not None else None
 
 
-def _system_status_flag(data: dict[str, Any]) -> bool | None:
+def _grid_status_flag(data: dict[str, Any]) -> bool | None:
     """Return True when the system is on-grid"""
     value = data["status"].get("SystemStatus")
     return bool(str(value).lower() == "ongrid") if value is not None else None
@@ -53,31 +53,31 @@ STATUS_BINARY_SENSORS: tuple[SonnenBinarySensorEntityDescription, ...] = (
         value_fn=lambda d: _status_flag(d, "dischargeNotAllowed"),
     ),
     SonnenBinarySensorEntityDescription(
-        key="system_status",
-        translation_key="system_status",
+        key="grid_status",
+        translation_key="grid_status",
         icon="mdi:transmission-tower",
-        value_fn=_system_status_flag,
+        value_fn=_grid_status_flag,
     ),
 )
 
 DIAGNOSTIC_BINARY_SENSORS: tuple[SonnenBinarySensorEntityDescription, ...] = (
     SonnenBinarySensorEntityDescription(
-        key="balance_charge_request",
-        translation_key="balance_charge_request",
+        key="battery_balance_charge_request",
+        translation_key="battery_balance_charge_request",
         icon="mdi:battery-arrow-up",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: _battery_flag(d, "balancechargerequest"),
     ),
     SonnenBinarySensorEntityDescription(
-        key="system_alarm",
-        translation_key="system_alarm",
+        key="battery_system_alarm",
+        translation_key="battery_system_alarm",
         device_class=BinarySensorDeviceClass.PROBLEM,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: _battery_flag(d, "systemalarm"),
     ),
     SonnenBinarySensorEntityDescription(
-        key="system_warning",
-        translation_key="system_warning",
+        key="battery_system_warning",
+        translation_key="battery_system_warning",
         device_class=BinarySensorDeviceClass.PROBLEM,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: _battery_flag(d, "systemwarning"),

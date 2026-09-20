@@ -117,52 +117,52 @@
             "inverter_temperature": {
                 "name": "Inverter > Temperature"
             },
-            "pv_power": {
+            "inverter_pv_power": {
                 "name": "Inverter > PV Power"
             },
-            "pv_voltage": {
+            "inverter_pv_voltage": {
                 "name": "Inverter > PV Voltage"
             },
-            "pv_current": {
+            "inverter_pv_current": {
                 "name": "Inverter > PV Current"
             },
             "battery_cycles": {
                 "name": "Battery > Charge Cycles"
             },
-            "system_dc_current": {
+            "battery_system_dc_current": {
                 "name": "Battery > DC Current"
             },
-            "system_dc_voltage": {
+            "battery_system_dc_voltage": {
                 "name": "Battery > DC Voltage"
             },
-            "cell_temperature_max": {
+            "battery_cell_temperature_max": {
                 "name": "Battery > Maximum Cell Temperature"
             },
-            "cell_temperature_min": {
+            "battery_cell_temperature_min": {
                 "name": "Battery > Minimum Cell Temperature"
             },
-            "cell_voltage_max": {
+            "battery_cell_voltage_max": {
                 "name": "Battery > Maximum Cell Voltage"
             },
-            "cell_voltage_min": {
+            "battery_cell_voltage_min": {
                 "name": "Battery > Minimum Cell Voltage"
             },
-            "full_charge_capacity": {
+            "battery_full_charge_capacity": {
                 "name": "Battery > Full Charge Capacity"
             },
-            "state_of_health": {
+            "battery_state_of_health": {
                 "name": "Battery > State of Health"
             },
-            "module_count": {
+            "system_module_count": {
                 "name": "System > Battery Module Count"
             },
-            "inverter_max_power": {
+            "system_installed_capacity": {
                 "name": "System > Inverter Max. Power"
             },
             "installed_capacity": {
                 "name": "System > Installed Capacity"
             },
-            "software_version": {
+            "system_software_version": {
                 "name": "System > Software Version"
             },
             "pm_w_total": {
@@ -206,16 +206,16 @@
             "battery_care": {
                 "name": "Battery Care"
             },
-            "system_status": {
+            "grid_status": {
                 "name": "Grid Status"
             },
-            "balance_charge_request": {
+            "battery_balance_charge_request": {
                 "name": "Battery > Balance Charge"
             },
-            "system_alarm": {
+            "battery_system_alarm": {
                 "name": "Battery > System Alarm"
             },
-            "system_warning": {
+            "battery_system_warning": {
                 "name": "Battery > System Warning"
             }
         },

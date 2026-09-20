@@ -117,52 +117,52 @@
             "inverter_temperature": {
                 "name": "Wechselrichter > Temperatur"
             },
-            "pv_power": {
+            "inverter_pv_power": {
                 "name": "Wechselrichter > PV Leistung"
             },
-            "pv_voltage": {
+            "inverter_pv_voltage": {
                 "name": "Wechselrichter > PV Spannung"
             },
-            "pv_current": {
+            "inverter_pv_current": {
                 "name": "Wechselrichter > PV Strom"
             },
             "battery_cycles": {
                 "name": "Batterie > Ladezyklen"
             },
-            "system_dc_current": {
+            "battery_system_dc_current": {
                 "name": "Batterie > DC Strom"
             },
-            "system_dc_voltage": {
+            "battery_system_dc_voltage": {
                 "name": "Batterie > DC Spannung"
             },
-            "cell_temperature_max": {
+            "battery_cell_temperature_max": {
                 "name": "Batterie > Maximale Zelltemperatur"
             },
-            "cell_temperature_min": {
+            "battery_cell_temperature_min": {
                 "name": "Batterie > Minimale Zelltemperatur"
             },
-            "cell_voltage_max": {
+            "battery_cell_voltage_max": {
                 "name": "Batterie > Maximale Zellspannung"
             },
-            "cell_voltage_min": {
+            "battery_cell_voltage_min": {
                 "name": "Batterie > Minimale Zellspannung"
             },
-            "full_charge_capacity": {
+            "battery_full_charge_capacity": {
                 "name": "Batterie > Volle Ladekapazität"
             },
-            "state_of_health": {
+            "battery_state_of_health": {
                 "name": "Batterie > Gesundheitszustand"
             },
-            "module_count": {
+            "system_module_count": {
                 "name": "System > Anzahl Batteriemodule"
             },
-            "inverter_max_power": {
+            "system_inverter_max_power": {
                 "name": "System > Wechselrichter Max. Leistung"
             },
-            "installed_capacity": {
+            "system_installed_capacity": {
                 "name": "System > Installierte Kapazität"
             },
-            "software_version": {
+            "system_software_version": {
                 "name": "System > Software Version"
             },
             "pm_w_total": {
@@ -206,16 +206,16 @@
             "battery_care": {
                 "name": "Batteriepflege"
             },
-            "system_status": {
+            "grid_status": {
                 "name": "Netz Status"
             },
-            "balance_charge_request": {
+            "battery_balance_charge_request": {
                 "name": "Batterie > Ausgleichsladen"
             },
-            "system_alarm": {
+            "battery_system_alarm": {
                 "name": "Batterie > Systemalarm"
             },
-            "system_warning": {
+            "battery_system_warning": {
                 "name": "Batterie > Systemwarnung"
             }
         },
