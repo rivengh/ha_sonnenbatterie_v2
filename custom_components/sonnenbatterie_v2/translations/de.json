@@ -91,9 +91,6 @@
             "remaining_capacity": {
                 "name": "Verbleibende Kapazität (relativ)"
             },
-            "system_status": {
-                "name": "Netz Status"
-            },
             "operating_mode": {
                 "name": "Betriebsmodus",
                 "state": {
@@ -208,6 +205,9 @@
         "binary_sensor": {
             "battery_care": {
                 "name": "Batteriepflege"
+            },
+            "system_status": {
+                "name": "Netz Status"
             },
             "balance_charge_request": {
                 "name": "Batterie > Ausgleichsladen"

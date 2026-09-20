@@ -205,14 +205,6 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         value_fn=_remaining_wh,
     ),
     SonnenSensorEntityDescription(
-        key="system_status",
-        translation_key="system_status",
-        icon="mdi:transmission-tower",
-        value_fn=lambda d: (
-            v.lower() if isinstance(v := d["status"].get("SystemStatus"), str) else None
-        ),
-    ),
-    SonnenSensorEntityDescription(
         key="operating_mode",
         translation_key="operating_mode",
         icon="mdi:state-machine",

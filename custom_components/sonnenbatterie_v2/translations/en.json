@@ -91,9 +91,6 @@
             "remaining_capacity": {
                 "name": "Remaining Capacity (relative)"
             },
-            "system_status": {
-                "name": "Grid Status"
-            },
             "operating_mode": {
                 "name": "Operating Mode",
                 "state": {
@@ -208,6 +205,9 @@
         "binary_sensor": {
             "battery_care": {
                 "name": "Battery Care"
+            },
+            "system_status": {
+                "name": "Grid Status"
             },
             "balance_charge_request": {
                 "name": "Battery > Balance Charge"

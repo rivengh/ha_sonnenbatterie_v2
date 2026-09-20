@@ -38,6 +38,12 @@ def _status_flag(data: dict[str, Any], key: str) -> bool | None:
     return bool(value) if value is not None else None
 
 
+def _system_status_flag(data: dict[str, Any]) -> bool | None:
+    """Return True when the system is on-grid"""
+    value = data["status"].get("SystemStatus")
+    return bool(str(value).lower() == "ongrid") if value is not None else None
+
+
 # Names are provided via translations (entity.binary_sensor.<key>.name).
 STATUS_BINARY_SENSORS: tuple[SonnenBinarySensorEntityDescription, ...] = (
     SonnenBinarySensorEntityDescription(
@@ -46,6 +52,12 @@ STATUS_BINARY_SENSORS: tuple[SonnenBinarySensorEntityDescription, ...] = (
         icon="mdi:wrench-clock",
         device_class=BinarySensorDeviceClass.RUNNING,
         value_fn=lambda d: _status_flag(d, "dischargeNotAllowed"),
+    ),
+    SonnenBinarySensorEntityDescription(
+        key="system_status",
+        translation_key="system_status",
+        icon="mdi:transmission-tower",
+        value_fn=_system_status_flag,
     ),
 )
 
