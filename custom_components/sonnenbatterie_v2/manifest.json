@@ -1,13 +1,13 @@
 {
   "domain": "sonnenbatterie_v2",
   "name": "sonnenBatterie (v2 API)",
-  "codeowners": ["@Leonhard-Schwarz"],
+  "codeowners": ["@Leonhard-Schwarz, @rivengh"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/Leonhard-Schwarz/ha_sonnenbatterie_v2",
+  "documentation": "https://github.com/rivengh/ha_sonnenbatterie_v2",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/Leonhard-Schwarz/ha_sonnenbatterie_v2/issues",
+  "issue_tracker": "https://github.com/rivengh/ha_sonnenbatterie_v2/issues",
   "requirements": [],
-  "version": "0.3.0"
+  "version": "0.1.0"
 }
