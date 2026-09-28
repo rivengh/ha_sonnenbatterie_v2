@@ -2,7 +2,7 @@
 
 Home Assistant custom integration for sonnenBatterie systems that expose the modern token-based `/api/v2` interface (the one documented under **Dashboard → Software Integration**).
 
-> [!NOTE] Fork Notice
+> [!NOTE]
 > This repository is my fork from [Leonhard-Schwarz/ha_sonnenbatterie_v2](https://github.com/Leonhard-Schwarz/ha_sonnenbatterie_v2).
 > Its main purpose is to introduce configurable polling intervals for status, diagnostic and configuration data, and to make power meter sensors optional.
 > And it may include other local patches, custom changes not present upstream.
