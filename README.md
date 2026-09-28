@@ -173,8 +173,6 @@ This project is distributed under the terms of the repository license. Please ch
 
 ## 🖼️ Screenshots
 
-Below are screenshots from the Home Assistant app (with German translations):
-
 Sensors Dashboard | Device Info
 --- | ---
 ![Sensors Dashboard](assets/sensors-dashboard.png) | ![Device Info](assets/device-info.png)
