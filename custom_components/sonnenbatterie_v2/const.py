@@ -20,6 +20,10 @@ DEFAULT_DIAGNOSTIC_SCAN_INTERVAL: Final = 300  # 5m
 DEFAULT_CONFIGURATION_SCAN_INTERVAL: Final = 3600  # 1h
 MIN_SCAN_INTERVAL: Final = 5
 
+# Maximum number of API retries before raising an error.
+# Note: This is used in the coordinator to retry API calls with exponential backoff.
+MAX_API_RETRIES: Final = 3
+
 PLATFORMS: Final = [
     Platform.BINARY_SENSOR,
     Platform.SENSOR,

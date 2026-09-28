@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from typing import Any, NoReturn
 
@@ -18,6 +19,7 @@ from .const import (
     DEFAULT_NAME,
     DOMAIN,
     LOGGER,
+    MAX_API_RETRIES,
 )
 
 
@@ -71,6 +73,20 @@ class _SonnenBaseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             raise UpdateFailed(str(err)) from err
         raise err
 
+    async def _async_call_with_retry(
+        self, api_call: Callable[[], Awaitable[Any]]
+    ) -> Any:
+        """Retry an API call up to MAX_API_RETRIES times with exponential backoff."""
+        for attempt in range(MAX_API_RETRIES + 1):
+            try:
+                return await api_call()
+            except Exception:
+                if attempt == MAX_API_RETRIES:
+                    raise
+                await asyncio.sleep(2**attempt)
+
+        raise RuntimeError("API retry loop exited unexpectedly")
+
 
 class SonnenCoordinator(_SonnenBaseCoordinator):
     """Poll frequently changing battery status data."""
@@ -78,7 +94,7 @@ class SonnenCoordinator(_SonnenBaseCoordinator):
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch operational status and calculate derived values."""
         try:
-            status = await self.api.get_status()
+            status = await self._async_call_with_retry(self.api.get_status)
         except Exception as err:
             self._raise_api_error(err)
 
@@ -111,14 +127,14 @@ class SonnenDiagnosticCoordinator(_SonnenBaseCoordinator):
         try:
             if self.config_entry.data.get(CONF_EXPOSE_POWERMETER_SENSORS, True):
                 inverter, battery, powermeter = await asyncio.gather(
-                    self.api.get_inverter(),
-                    self.api.get_battery(),
-                    self.api.get_powermeter(),
+                    self._async_call_with_retry(self.api.get_inverter),
+                    self._async_call_with_retry(self.api.get_battery),
+                    self._async_call_with_retry(self.api.get_powermeter),
                 )
             else:
                 inverter, battery = await asyncio.gather(
-                    self.api.get_inverter(),
-                    self.api.get_battery(),
+                    self._async_call_with_retry(self.api.get_inverter),
+                    self._async_call_with_retry(self.api.get_battery),
                 )
                 powermeter = []
         except Exception as err:
@@ -162,7 +178,9 @@ class SonnenConfigurationCoordinator(_SonnenBaseCoordinator):
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch configuration data and calculate derived capacity."""
         try:
-            configurations = await self.api.get_configurations()
+            configurations = await self._async_call_with_retry(
+                self.api.get_configurations
+            )
         except Exception as err:
             self._raise_api_error(err)
 
