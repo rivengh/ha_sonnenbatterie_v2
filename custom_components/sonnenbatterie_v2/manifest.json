@@ -1,7 +1,7 @@
 {
   "domain": "sonnenbatterie_v2",
   "name": "sonnenBatterie (v2 API)",
-  "codeowners": ["@Leonhard-Schwarz, @rivengh"],
+  "codeowners": ["@Leonhard-Schwarz", "@rivengh"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/rivengh/ha_sonnenbatterie_v2",
