@@ -152,9 +152,18 @@ System installed capacity | Wh | Derived from `/api/v2/configurations` | `IC_Bat
 
 This chapter provides a list of currently exposed control entities.
 
-**Control** (requires write access on the battery): operating mode (select),
-forced charge / forced discharge (sliders), battery reserve (slider) and reset
-buttons. *Time-of-Use schedule and standby are not implemented yet.*
+Control | Type | API endpoint | Enabled by default
+--- | --- | --- | :---
+Operating mode | Select | `/api/v2/operatingmode/{mode}` | Yes
+Battery reserve | Slider | `/api/v2/backupreserve/{percent}` | Yes
+Manual charge | Slider | `/api/v2/setpoint/charge/{watt}` | Yes
+Manual discharge | Slider | `/api/v2/setpoint/discharge/{watt}` | Yes
+Reset manual charge | Button | `/api/v2/setpoint/charge/0` | Yes
+Reset manual discharge | Button | `/api/v2/setpoint/discharge/0` | Yes
+
+> [!NOTE]
+> Manual charge/discharge requires the battery to be in **Manual** operating mode.
+> The reset buttons are provided for convenience, but you can also set the slider to `0` to achieve the same effect.
 
 ## ⚠️ Known limitations
 
