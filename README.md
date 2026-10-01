@@ -94,7 +94,7 @@ AC charge | W | `/api/v2/status` | `Pac_total_W` | No
 AC discharge | W | `/api/v2/status` | `Pac_total_W` | No
 User state of charge | % | `/api/v2/status` | `USOC` | Yes
 Relative state of charge | % | `/api/v2/status` | `RSOC` | No
-Remaining capacity | Wh | `/api/v2/status` | `RemainingCapacity_W` or `RemainingCapacity_Wh` | s
+Remaining capacity | Wh | `/api/v2/status` | either `RemainingCapacity_W` or `RemainingCapacity_Wh` | Yes
 Operating mode | — | `/api/v2/status` | `OperatingMode` | Yes
 Battery voltage | V | `/api/v2/status` | `Ubat` | Yes
 AC frequency | Hz | `/api/v2/status` | `Fac` | Yes
