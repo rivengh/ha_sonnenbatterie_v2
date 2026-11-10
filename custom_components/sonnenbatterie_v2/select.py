@@ -38,6 +38,10 @@ class SonnenOperatingModeSelect(SonnenEntity, SelectEntity):
 
     @property
     def current_option(self) -> str | None:
+        optimistic_option = getattr(self, "_optimistic_option", None)
+        if optimistic_option is not None:
+            return optimistic_option
+
         mode = OPERATING_MODES.get(str(self.coordinator.data["status"].get("OperatingMode")))
         return mode if mode in SELECTABLE_MODES else None
 
@@ -45,3 +49,10 @@ class SonnenOperatingModeSelect(SonnenEntity, SelectEntity):
         await self.coordinator.async_set_configuration(
             CONF_EM_OPERATING_MODE, _MODE_VALUES[option]
         )
+
+        self._optimistic_option = option
+        self.async_write_ha_state()
+
+    def _handle_coordinator_update(self) -> None:
+        self._optimistic_option = None
+        super()._handle_coordinator_update()

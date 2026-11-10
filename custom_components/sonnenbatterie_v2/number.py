@@ -136,7 +136,18 @@ class SonnenReserveNumber(SonnenEntity, NumberEntity):
 
     @property
     def native_value(self) -> int | None:
+        optimistic_value = getattr(self, "_optimistic_value", None)
+        if optimistic_value is not None:
+            return optimistic_value
+
         return _to_int(self.coordinator.data["status"].get("BackupBuffer"))
 
     async def async_set_native_value(self, value: float) -> None:
         await self.coordinator.async_set_configuration(CONF_EM_USOC, int(value))
+
+        self._optimistic_value = value
+        self.async_write_ha_state()
+
+    def _handle_coordinator_update(self) -> None:
+        self._optimistic_value = None
+        super()._handle_coordinator_update()
