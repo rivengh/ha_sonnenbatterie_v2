@@ -1,25 +1,23 @@
-"""Number platform: charge/discharge setpoints and battery reserve."""
+"""Number platform: forced charge/discharge setpoints and battery reserve."""
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
 
 from homeassistant.components.number import (
     NumberDeviceClass,
+    NumberEntity,
     NumberEntityDescription,
     NumberMode,
     RestoreNumber,
 )
 from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfPower
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import SonnenConfigEntry
-from .api import SonnenApiError, SonnenV2Api
 from .const import CONF_EM_USOC
+from .coordinator import SonnenConfigEntry
 from .entity import SonnenEntity
 
 _DEFAULT_MAX_POWER = 5000
@@ -33,14 +31,39 @@ def _to_int(value: Any) -> int | None:
 
 
 @dataclass(frozen=True, kw_only=True)
-class SonnenNumberEntityDescription(NumberEntityDescription):
-    set_fn: Callable[[SonnenV2Api, int], Awaitable[Any]]
-    value_fn: Callable[[dict[str, Any]], float | None] | None = None
-    dynamic_max_from_inverter: bool = False
+class SonnenSetpointEntityDescription(NumberEntityDescription):
+    direction: str  # "charge" | "discharge"
 
 
-STATUS_NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
-    SonnenNumberEntityDescription(
+SETPOINTS: tuple[SonnenSetpointEntityDescription, ...] = (
+    SonnenSetpointEntityDescription(
+        key="force_charge",
+        translation_key="force_charge",
+        icon="mdi:battery-plus-outline",
+        entity_category=EntityCategory.CONFIG,
+        device_class=NumberDeviceClass.POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        native_min_value=0,
+        native_step=100,
+        mode=NumberMode.SLIDER,
+        direction="charge",
+    ),
+    SonnenSetpointEntityDescription(
+        key="force_discharge",
+        translation_key="force_discharge",
+        icon="mdi:battery-minus-outline",
+        entity_category=EntityCategory.CONFIG,
+        device_class=NumberDeviceClass.POWER,
+        native_unit_of_measurement=UnitOfPower.WATT,
+        native_min_value=0,
+        native_step=100,
+        mode=NumberMode.SLIDER,
+        direction="discharge",
+    ),
+)
+
+RESERVE: tuple[NumberEntityDescription, ...] = (
+    NumberEntityDescription(
         key="battery_reserve",
         translation_key="battery_reserve",
         icon="mdi:battery-lock",
@@ -51,37 +74,6 @@ STATUS_NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
         native_max_value=100,
         native_step=1,
         mode=NumberMode.SLIDER,
-        value_fn=lambda d: _to_int(d["status"].get("BackupBuffer")),
-        set_fn=lambda api, v: api.set_configuration(CONF_EM_USOC, int(v)),
-    ),
-)
-
-CONFIGURATION_NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
-    SonnenNumberEntityDescription(
-        key="force_charge",
-        translation_key="force_charge",
-        icon="mdi:battery-plus-outline",
-        entity_category=EntityCategory.CONFIG,
-        device_class=NumberDeviceClass.POWER,
-        native_unit_of_measurement=UnitOfPower.WATT,
-        native_min_value=0,
-        native_step=100,
-        mode=NumberMode.SLIDER,
-        dynamic_max_from_inverter=True,
-        set_fn=lambda api, v: api.set_setpoint("charge", v),
-    ),
-    SonnenNumberEntityDescription(
-        key="force_discharge",
-        translation_key="force_discharge",
-        icon="mdi:battery-minus-outline",
-        entity_category=EntityCategory.CONFIG,
-        device_class=NumberDeviceClass.POWER,
-        native_unit_of_measurement=UnitOfPower.WATT,
-        native_min_value=0,
-        native_step=100,
-        mode=NumberMode.SLIDER,
-        dynamic_max_from_inverter=True,
-        set_fn=lambda api, v: api.set_setpoint("discharge", v),
     ),
 )
 
@@ -89,57 +81,62 @@ CONFIGURATION_NUMBERS: tuple[SonnenNumberEntityDescription, ...] = (
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: SonnenConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up sonnenBatterie number entities."""
     runtime = entry.runtime_data
-    entities: list[SonnenNumber] = []
-    # Add number entities for default coordinator (status data)
+    entities: list[Any] = []
+    # Add SonnenReserveNumber entities for default coordinator (status data)
     entities.extend(
-        SonnenNumber(runtime.coordinator, description) for description in STATUS_NUMBERS
+        SonnenReserveNumber(runtime.coordinator, description) for description in RESERVE
     )
-    # Add number entities for configuration coordinator (configuration data)
+    # Add SonnenSetpointNumber entities for configuration coordinator (configuration data)
     entities.extend(
-        SonnenNumber(runtime.configuration_coordinator, description)
-        for description in CONFIGURATION_NUMBERS
+        SonnenSetpointNumber(runtime.configuration_coordinator, description)
+        for description in SETPOINTS
     )
     async_add_entities(entities)
 
 
-class SonnenNumber(SonnenEntity, RestoreNumber):
-    """Charge/discharge setpoints (write-only) and battery reserve (read+write)."""
+class SonnenSetpointNumber(SonnenEntity, RestoreNumber):
+    """Forced charge/discharge power.
 
-    entity_description: SonnenNumberEntityDescription
+    The API can't read a setpoint back, so this shows the last written value
+    (kept in the configuration coordinator, shared with the reset buttons) and
+    restores it after a restart.
+    """
 
-    def __init__(self, coordinator, description: SonnenNumberEntityDescription) -> None:
-        super().__init__(coordinator, description)
-        self._last_set: float | None = None
+    entity_description: SonnenSetpointEntityDescription
 
     async def async_added_to_hass(self) -> None:
-        """Restore the last written value for the write-only setpoints."""
         await super().async_added_to_hass()
-        if self.entity_description.value_fn is None:
-            last = await self.async_get_last_number_data()
-            if last is not None and last.native_value is not None:
-                self._last_set = last.native_value
+        last = await self.async_get_last_number_data()
+        if last is not None and last.native_value:
+            direction = self.entity_description.direction
+            self.coordinator.setpoints[direction] = int(last.native_value)
 
     @property
     def native_max_value(self) -> float:
-        if self.entity_description.dynamic_max_from_inverter:
-            return self.coordinator.inverter_max_power or _DEFAULT_MAX_POWER
-        return self.entity_description.native_max_value
+        return self.coordinator.inverter_max_power or _DEFAULT_MAX_POWER
 
     @property
-    def native_value(self) -> float | None:
-        if self.entity_description.value_fn is not None:
-            return self.entity_description.value_fn(self.coordinator.data)
-        return self._last_set if self._last_set is not None else 0
+    def native_value(self) -> float:
+        return self.coordinator.setpoints[
+            self.entity_description.direction
+        ]
 
     async def async_set_native_value(self, value: float) -> None:
-        try:
-            await self.entity_description.set_fn(self.coordinator.api, int(value))
-        except SonnenApiError as err:
-            raise HomeAssistantError(f"Write failed: {err}") from err
-        if self.entity_description.value_fn is None:
-            self._last_set = value
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_set_setpoint(
+            self.entity_description.direction, int(value)
+        )
+
+
+class SonnenReserveNumber(SonnenEntity, NumberEntity):
+    """Battery reserve for backup power (EM_USOC), read back from /status."""
+
+    @property
+    def native_value(self) -> int | None:
+        return _to_int(self.coordinator.data["status"].get("BackupBuffer"))
+
+    async def async_set_native_value(self, value: float) -> None:
+        await self.coordinator.async_set_configuration(CONF_EM_USOC, int(value))

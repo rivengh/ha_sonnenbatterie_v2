@@ -23,13 +23,13 @@ from homeassistant.const import (
     UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 
 from . import SonnenConfigEntry
 from .const import (
     CONF_EXPOSE_POWERMETER_SENSORS,
-    OPERATING_MODES_REVERSE,
+    OPERATING_MODES,
 )
 from .coordinator import SonnenCoordinator
 from .entity import SonnenEntity
@@ -133,7 +133,7 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
     SonnenSensorEntityDescription(
         key="grid_export",
         translation_key="grid_export",
-        icon="mdi:transmission-tower-import",
+        icon="mdi:transmission-tower-export",
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfPower.WATT,
@@ -143,7 +143,7 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
     SonnenSensorEntityDescription(
         key="grid_import",
         translation_key="grid_import",
-        icon="mdi:transmission-tower-export",
+        icon="mdi:transmission-tower-import",
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfPower.WATT,
@@ -209,17 +209,8 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         translation_key="operating_mode",
         icon="mdi:state-machine",
         device_class=SensorDeviceClass.ENUM,
-        options=[
-            "manual",
-            "self_consumption",
-            "testing",
-            "module_extension",
-            "time_of_use",
-            "automatic_optimization",
-        ],
-        value_fn=lambda d: OPERATING_MODES_REVERSE.get(
-            str(d["status"].get("OperatingMode"))
-        ),
+        options=list(OPERATING_MODES.values()),
+        value_fn=lambda d: OPERATING_MODES.get(str(d["status"].get("OperatingMode"))),
     ),
     SonnenSensorEntityDescription(
         key="voltage_battery",
@@ -252,7 +243,7 @@ STATUS_SENSORS: tuple[SonnenSensorEntityDescription, ...] = (
         icon="mdi:battery-lock",
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=PERCENTAGE,
-        value_fn=lambda d: d["status"].get("BackupBuffer"),
+        value_fn=lambda d: _to_int(d["status"].get("BackupBuffer")),
     ),
 )
 
@@ -465,7 +456,21 @@ def _pm_value(d: dict[str, Any], deviceid: Any, channel: Any, field: str) -> Any
     return None
 
 
-def _powermeter_descriptions(
+def _meter_key(index: int, meter: dict[str, Any]) -> str:
+    """Stable entity-key prefix of a meter (part of its entities' unique ids).
+
+    Uses (deviceid, channel); falls back to the list position only if the meter
+    exposes no ids at all.
+    """
+    deviceid = meter.get("deviceid")
+    channel = meter.get("channel")
+    direction = str(meter.get("direction", "meter"))
+    key_device = deviceid if deviceid is not None else index
+    key_channel = channel if channel is not None else index
+    return f"meter_{direction}_{key_device}_{key_channel}".lower()
+
+
+def _meter_descriptions(
     coordinator: SonnenCoordinator,
 ) -> list[SonnenSensorEntityDescription]:
     """Build per-meter sensor descriptions.
@@ -476,15 +481,13 @@ def _powermeter_descriptions(
     descriptions: list[SonnenSensorEntityDescription] = []
     meters = coordinator.data.get("powermeter", []) if coordinator.data else []
     for index, meter in enumerate(meters):
+        prefix = _meter_key(index, meter)
         deviceid = meter.get("deviceid")
         channel = meter.get("channel")
         direction = str(meter.get("direction", "meter"))
-        # Stable identity for the entity key; fall back to position only if the
-        # meter exposes no ids at all.
-        key_device = deviceid if deviceid is not None else index
-        key_channel = channel if channel is not None else index
-        prefix = f"meter_{direction}_{key_device}_{key_channel}".lower()
-        placeholders = {"meter": f"{direction.capitalize()} {key_channel}"}
+        placeholders = {
+            "meter": f"{direction.capitalize()} {channel if channel is not None else index}"
+        }
 
         for field, (device_class, unit) in _PM_FIELDS.items():
             descriptions.append(
@@ -526,7 +529,7 @@ def _powermeter_descriptions(
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: SonnenConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up sonnenBatterie sensors."""
     runtime = entry.runtime_data
@@ -548,7 +551,7 @@ async def async_setup_entry(
     if entry.data.get(CONF_EXPOSE_POWERMETER_SENSORS, True):
         entities.extend(
             SonnenSensor(runtime.diagnostic_coordinator, description)
-            for description in _powermeter_descriptions(runtime.diagnostic_coordinator)
+            for description in _meter_descriptions(runtime.diagnostic_coordinator)
         )
 
     async_add_entities(entities)

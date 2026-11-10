@@ -225,7 +225,6 @@
                 "state": {
                     "self_consumption": "Automatic - Self-Consumption",
                     "automatic_optimization": "Automatic - Optimization",
-                    "module_extension": "Battery-Module-Extension",
                     "time_of_use": "Time-Of-Use",
                     "manual": "Manual"
                 }
@@ -253,5 +252,9 @@
                 "name": "Reset Manual Discharge"
             }
         }
+    },
+    "exceptions": {
+        "write_denied": { "message": "The sonnenBatterie refused the write (401). Make sure write access is enabled under “Software Integration”." },
+        "write_failed": { "message": "Writing to the sonnenBatterie failed: {error}" }
     }
 }

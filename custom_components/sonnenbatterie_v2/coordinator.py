@@ -9,7 +9,10 @@ from typing import Any, NoReturn
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.exceptions import (
+    ConfigEntryAuthFailed,
+    HomeAssistantError,
+)
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -22,6 +25,20 @@ from .const import (
     MAX_API_RETRIES,
 )
 
+from dataclasses import dataclass
+
+
+@dataclass
+class SonnenRuntimeData:
+    """Runtime coordinators for the integration."""
+
+    coordinator: SonnenCoordinator
+    diagnostic_coordinator: SonnenDiagnosticCoordinator
+    configuration_coordinator: SonnenConfigurationCoordinator
+
+
+type SonnenConfigEntry = ConfigEntry[SonnenRuntimeData]
+
 
 class _SonnenBaseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Provide shared setup, device metadata, and error handling."""
@@ -29,7 +46,7 @@ class _SonnenBaseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def __init__(
         self,
         hass: HomeAssistant,
-        entry: ConfigEntry,
+        entry: SonnenConfigEntry,
         api: SonnenV2Api,
         scan_interval: int,
         configuration_coordinator: SonnenConfigurationCoordinator | None = None,
@@ -44,6 +61,8 @@ class _SonnenBaseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         self.api = api
         self._configuration_coordinator = configuration_coordinator or self
+        # The API can't read forced setpoints back, so retain the last values.
+        self.setpoints: dict[str, int] = {"charge": 0, "discharge": 0}
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -98,11 +117,14 @@ class SonnenCoordinator(_SonnenBaseCoordinator):
         except Exception as err:
             self._raise_api_error(err)
 
-        data: dict[str, Any] = {
-            "status": status,
-        }
+        data: dict[str, Any] = {"status": status}
         data["derived"] = self._derive(data)
         return data
+
+    async def async_set_configuration(self, key: str, value: int | str) -> None:
+        """Write one configuration value, then refresh."""
+        await _write(self.api.set_configuration(key, value))
+        await self.async_request_refresh()
 
     @staticmethod
     def _derive(data: dict[str, Any]) -> dict[str, Any]:
@@ -175,6 +197,18 @@ class SonnenDiagnosticCoordinator(_SonnenBaseCoordinator):
 class SonnenConfigurationCoordinator(_SonnenBaseCoordinator):
     """Poll slowly changing battery configuration data."""
 
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        entry: SonnenConfigEntry,
+        api: SonnenV2Api,
+        scan_interval: int,
+    ) -> None:
+        """Initialize the configuration coordinator."""
+        super().__init__(hass, entry, api, scan_interval)
+        # The API can't read forced setpoints back, so retain the last values.
+        self.setpoints: dict[str, int] = {"charge": 0, "discharge": 0}
+
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch configuration data and calculate derived capacity."""
         try:
@@ -184,11 +218,18 @@ class SonnenConfigurationCoordinator(_SonnenBaseCoordinator):
         except Exception as err:
             self._raise_api_error(err)
 
-        data: dict[str, Any] = {
-            "configurations": configurations or {},
-        }
+        data: dict[str, Any] = {"configurations": configurations or {}}
         data["derived"] = self._derive(data)
         return data
+
+    async def async_set_setpoint(self, direction: str, watts: int) -> None:
+        """Set forced charging or discharging; zero ends the setpoint."""
+        await _write(self.api.set_setpoint(direction, watts))
+        if watts:
+            self.setpoints = dict.fromkeys(self.setpoints, 0)
+        self.setpoints[direction] = watts
+        self.async_update_listeners()
+        await self.async_request_refresh()
 
     @property
     def inverter_max_power(self) -> int | None:
@@ -210,6 +251,20 @@ class SonnenConfigurationCoordinator(_SonnenBaseCoordinator):
         except (KeyError, TypeError, ValueError):
             installed_capacity_wh = None
 
-        return {
-            "installed_capacity_wh": installed_capacity_wh,
-        }
+        return {"installed_capacity_wh": installed_capacity_wh}
+
+
+async def _write(call: Awaitable[Any]) -> None:
+    """Await a write call and turn API errors into user-facing HA errors."""
+    try:
+        await call
+    except SonnenAuthError as err:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN, translation_key="write_denied"
+        ) from err
+    except SonnenApiError as err:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key="write_failed",
+            translation_placeholders={"error": str(err)},
+        ) from err

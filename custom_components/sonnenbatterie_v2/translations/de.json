@@ -223,10 +223,9 @@
             "operating_mode": {
                 "name": "Betriebsmodus",
                 "state": {
-                    "self_consumption": "Automatisch - Eigenverbrauch",
-                    "automatic_optimization": "Automatisch - Optimierung",
-                    "module_extension": "Batteriemodul-Erweiterung",
-                    "time_of_use": "Zeitfenster",
+                    "self_consumption": "Eigenverbrauch",
+                    "automatic_optimization": "Automatic - Optimization",
+                    "time_of_use": "Time-of-Use",
                     "manual": "Manuell"
                 }
             }
@@ -253,5 +252,9 @@
                 "name": "Manuelles Entladen zurücksetzen"
             }
         }
+    },
+    "exceptions": {
+        "write_denied": { "message": "Die sonnenBatterie hat den Schreibzugriff abgelehnt (401). Ist der Schreibzugriff unter „Software-Integration“ aktiviert?" },
+        "write_failed": { "message": "Schreiben auf die sonnenBatterie fehlgeschlagen: {error}" }
     }
 }

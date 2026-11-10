@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-import asyncio
 from typing import Any
 
 import aiohttp
 from aiohttp import ClientTimeout
-
-from .const import LOGGER
 
 _TIMEOUT = ClientTimeout(total=15)
 
@@ -65,22 +62,15 @@ class SonnenV2Api:
                 if resp.content_type == "application/json":
                     return await resp.json()
                 return (await resp.text()).strip()
-        except (SonnenAuthError, SonnenForbiddenError):
-            raise
         except aiohttp.ClientResponseError as err:
-            raise SonnenApiError(
-                f"HTTP {err.status} for {path}: {err.message}"
-            ) from err
-        except (aiohttp.ClientError, asyncio.TimeoutError) as err:
+            raise SonnenApiError(f"HTTP {err.status} for {path}: {err.message}") from err
+        except (TimeoutError, aiohttp.ClientError) as err:
             raise SonnenConnectionError(f"Cannot connect to {url}: {err}") from err
 
     # --- reads --------------------------------------------------------------
     async def get_status(self) -> dict[str, Any]:
         """Main status. This endpoint does NOT require a token."""
         return await self._request("GET", "/status", auth=False)
-
-    async def get_latestdata(self) -> dict[str, Any]:
-        return await self._request("GET", "/latestdata")
 
     async def get_inverter(self) -> dict[str, Any]:
         return await self._request("GET", "/inverter")
