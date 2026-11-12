@@ -24,6 +24,10 @@ MIN_SCAN_INTERVAL: Final = 5
 # Note: This is used in the coordinator to retry API calls with exponential backoff.
 MAX_API_RETRIES: Final = 3
 
+# Grace period (in seconds) after an authentication error before raising a ConfigEntryAuthFailed exception.
+# Note: This is used to avoid immediate failure on transient auth issues (e.g. during nightly reboots), allowing for retries.
+AUTH_ERROR_GRACE_PERIOD: Final = 300  # seconds
+
 PLATFORMS: Final = [
     Platform.BINARY_SENSOR,
     Platform.SENSOR,

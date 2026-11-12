@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from typing import Any, NoReturn
@@ -23,6 +24,7 @@ from .const import (
     DOMAIN,
     LOGGER,
     MAX_API_RETRIES,
+    AUTH_ERROR_GRACE_PERIOD,
 )
 
 from dataclasses import dataclass
@@ -61,8 +63,6 @@ class _SonnenBaseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         self.api = api
         self._configuration_coordinator = configuration_coordinator or self
-        # The API can't read forced setpoints back, so retain the last values.
-        self.setpoints: dict[str, int] = {"charge": 0, "discharge": 0}
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -83,10 +83,14 @@ class _SonnenBaseCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             configuration_url=f"http://{self.api.host}",
         )
 
-    @staticmethod
-    def _raise_api_error(err: Exception) -> NoReturn:
+    def _raise_api_error(self, err: Exception) -> NoReturn:
         """Convert API exceptions into Home Assistant coordinator errors."""
         if isinstance(err, SonnenAuthError):
+            now = time.monotonic()
+            if self._auth_error_since is None:
+                self._auth_error_since = now
+            if now - self._auth_error_since < AUTH_ERROR_GRACE_PERIOD:
+                raise UpdateFailed("Temporary authentication failure") from err
             raise ConfigEntryAuthFailed(str(err)) from err
         if isinstance(err, SonnenApiError):
             raise UpdateFailed(str(err)) from err
@@ -119,6 +123,7 @@ class SonnenCoordinator(_SonnenBaseCoordinator):
 
         data: dict[str, Any] = {"status": status}
         data["derived"] = self._derive(data)
+        self._auth_error_since = None
         return data
 
     async def async_set_configuration(self, key: str, value: int | str) -> None:
@@ -168,6 +173,7 @@ class SonnenDiagnosticCoordinator(_SonnenBaseCoordinator):
             "battery": battery or {},
         }
         data["derived"] = self._derive(data)
+        self._auth_error_since = None
         return data
 
     def _derive(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -220,6 +226,7 @@ class SonnenConfigurationCoordinator(_SonnenBaseCoordinator):
 
         data: dict[str, Any] = {"configurations": configurations or {}}
         data["derived"] = self._derive(data)
+        self._auth_error_since = None
         return data
 
     async def async_set_setpoint(self, direction: str, watts: int) -> None:

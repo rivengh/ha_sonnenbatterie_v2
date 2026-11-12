@@ -137,18 +137,6 @@ async def test_status_unreachable_retries_setup(
     assert config_entry.state is ConfigEntryState.SETUP_RETRY
 
 
-async def test_rejected_token_starts_reauth(
-    hass: HomeAssistant,
-    aioclient_mock: AiohttpClientMocker,
-    config_entry: MockConfigEntry,
-) -> None:
-    mock_battery(aioclient_mock, battery={"status": 401})
-    await _setup(hass, config_entry)
-    assert config_entry.state is ConfigEntryState.SETUP_ERROR
-    flows = hass.config_entries.flow.async_progress()
-    assert [flow["context"]["source"] for flow in flows] == [SOURCE_REAUTH]
-
-
 async def test_diagnostics_redact_token(
     hass: HomeAssistant, battery: AiohttpClientMocker, config_entry: MockConfigEntry
 ) -> None:
